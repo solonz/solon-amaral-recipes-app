@@ -6,20 +6,20 @@ import App from '../Pages/Profile';
 
 describe('Verifica funcionalidades da página de Perfil', () => {
     // it('testa se a tela de perfil exibe corretamente', async () => {
-    //     // history.push('/');
+    //     
 
     //     const {history} = renderWithRouter(<App />);
-    //     await history.push('/');
-    //     expect(history.location.pathname).toBe('/');
+    //     
+    //     
 
-    //     // const emailInput = await screen.getByTestId(/email-input/i);
+    //     const emailInput = await screen.getByTestId(/email-input/i);
     //       const emailInput = await waitFor(() => screen.findByTestId(/email-input/i));
     //       const passwordInput = await waitFor(() => screen.findByTestId(/password-input/i));
     //       const loginButton = await waitFor(() => screen.findByTestId(/login-submit/i), { timeout: 4000 });
-    //     //   expect(loginButton).toBeInTheDocument();
+    //      expect(loginButton).toBeInTheDocument();
 
-    //     // const passwordInput = screen.getByTestId(/password-input/i);
-    //     // const loginButton = screen.getByTestId(/login-submit/i);
+    //     const passwordInput = screen.getByTestId(/password-input/i);
+    //     const loginButton = screen.getByTestId(/login-submit/i);
     //     userEvent.type(emailInput, 'lalala@gmail.com');
     //     userEvent.type(passwordInput, '1234567');
     //     userEvent.click(loginButton);

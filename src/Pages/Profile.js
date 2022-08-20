@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 function Profile() {
   const history = useHistory();
@@ -57,6 +58,7 @@ function Profile() {
           Logout
         </button>
       </form>
+      <Footer />
     </div>
   );
 }
