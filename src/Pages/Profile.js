@@ -30,7 +30,7 @@ function Profile() {
   return (
     <div>
       <p data-testid="profile-email">
-        {email && <p>{email.email}</p>}
+        {email && <span>{email.email}</span>}
         {' '}
 
       </p>
