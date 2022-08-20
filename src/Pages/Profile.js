@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 function Profile() {
   const history = useHistory();
-  // const [email, setEmail] = useState('');
-  // useEffect(() => {
-  // setEmail(localStorage.getItem('email'));
+  const [email, setEmail] = useState('');
 
-  // }, []);
+  function getEmail() {
+    const emailStorage = JSON.parse(localStorage.getItem('user'));
+    setEmail(emailStorage);
+  }
+
+  useEffect(() => {
+    getEmail();
+  }, []);
 
   function handleClickDoneRecipes() {
     history.push('/done-recipes');
@@ -25,7 +30,7 @@ function Profile() {
   return (
     <div>
       <p data-testid="profile-email">
-        {/* {email} */}
+        {email && <p>{email.email}</p>}
         {' '}
 
       </p>
