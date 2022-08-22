@@ -15,10 +15,10 @@ function App() {
       <Route exact path="/" component={ Login } />
       <Route exact path="/foods" component={ Foods } />
       <Route exact path="/drinks" component={ Drinks } />
-      <Route exact path="/foods/{id-da-receita}" component={ Details } />
-      <Route exact path="/drinks/{id-da-receita}" component={ Details } />
-      <Route exact path="/foods/{id-da-receita}/in-progress" />
-      <Route exact path="/drinks/{id-da-receita}/in-progress" />
+      <Route exact path="/foods/:idMeal" component={ Details } />
+      <Route exact path="/drinks/:idDrink" component={ Details } />
+      <Route exact path="/foods/:idMeal/in-progress" />
+      <Route exact path="/drinks/:idDrink/in-progress" />
       <Route path="/profile" component={ Profile } />
       <Route exact path="/done-recipes" component={ DoneRecipes } />
       <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
