@@ -113,6 +113,7 @@ function SearchBar() {
         <label htmlFor="ingredient">
           Ingredient
           <input
+            name="radioSearch"
             type="radio"
             value="ingredient"
             data-testid="ingredient-search-radio"
@@ -123,6 +124,7 @@ function SearchBar() {
         <label htmlFor="name">
           Name
           <input
+            name="radioSearch"
             type="radio"
             value="name"
             data-testid="name-search-radio"
@@ -133,6 +135,7 @@ function SearchBar() {
         <label htmlFor="first letter">
           First letter
           <input
+            name="radioSearch"
             type="radio"
             value="first letter"
             data-testid="first-letter-search-radio"
