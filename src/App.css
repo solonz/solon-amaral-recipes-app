@@ -71,3 +71,10 @@
   bottom: 0;
   position: fixed;
 }
+
+.imgFoods {
+  height: auto;
+  max-height: 140px;
+  max-width: 140px;
+  width: auto;
+}

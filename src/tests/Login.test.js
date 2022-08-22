@@ -4,6 +4,7 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
+import Provider from '../context/Provider';
 
 const renderWithRouter = (component) => {
   const history = createMemoryHistory();
@@ -14,14 +15,14 @@ const renderWithRouter = (component) => {
 
 describe('Login page', () => {
     test('if inputs are rendered', () => {
-        renderWithRouter(<Login />);
+        renderWithRouter((<Provider><Login /></Provider>));
         const emailInput = screen.getByTestId("email-input");
         expect(emailInput).toBeInTheDocument();
         const passInput = screen.getByTestId("password-input");
         expect(passInput).toBeInTheDocument();
     });
     test('user events', async () => {
-        const { history } = renderWithRouter(<Login />);
+        const { history } = renderWithRouter(<Provider><Login /></Provider>);
         const emailInput = await screen.findByTestId("email-input");
         userEvent.type(emailInput, 'aaaa@aaaa.com')
         const passInput = await screen.findByTestId("password-input");
