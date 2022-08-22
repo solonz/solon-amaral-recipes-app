@@ -54,9 +54,12 @@ describe('Verifica funcionalidades da página de Perfil', () => {
         const passInput = await screen.findByTestId("password-input");
         userEvent.type(passInput, '1234567') 
         const loginButton = await screen.findByTestId("login-submit-btn");
-        
         userEvent.click(loginButton);
-        history.push('/profile');
+        const profileButton = screen.getByTestId(/profile-top-btn/i);
+        userEvent.click(profileButton);
+
+        // history.push('/profile');
         expect(localStorage.getItem('user')).toBeTruthy();
+        expect(screen.getByText('aaaa@aaaa.com')).toBeInTheDocument();
     });
 });
