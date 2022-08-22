@@ -5,7 +5,7 @@ import Context from '../context/Context';
 
 function Drinks() {
   const { drinks, loading, drinkCategory,
-    drinkByCategory, resetDrinksFilter } = useContext(Context);
+    resetDrinksFilter, handleDrink } = useContext(Context);
   const num12 = 12;
   const num5 = 5;
   return (
@@ -17,7 +17,7 @@ function Drinks() {
           key={ id }
           data-testid={ `${category.strCategory}-category-filter` }
           type="button"
-          onClick={ () => drinkByCategory(category.strCategory) }
+          onClick={ () => handleDrink(category.strCategory) }
         >
           {category.strCategory}
 
