@@ -4,12 +4,13 @@ import Header from '../components/Header';
 import Context from '../context/Context';
 
 function Drinks() {
-  const { drinks } = useContext(Context);
+  const { drinks, loading } = useContext(Context);
   const num12 = 12;
   return (
     <div>
       <Header />
-      {drinks.drinks
+      {loading ? 'Carregando...'
+        : drinks.drinks
         && drinks.drinks.slice(0, num12).map((drink, index) => (
           <div key={ index } data-testid={ `${index}-recipe-card` }>
             <img
