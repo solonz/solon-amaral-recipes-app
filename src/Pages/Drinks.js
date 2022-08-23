@@ -5,13 +5,12 @@ import Header from '../components/Header';
 import Context from '../context/Context';
 
 function Drinks() {
-  const { drinks, loading, drinkCategory,
+  const { drinks, drinkCategory,
     resetDrinksFilter, handleDrink } = useContext(Context);
   const num12 = 12;
   const num5 = 5;
   return (
     <div>
-      {console.log(drinks)}
       <Header />
       { drinkCategory.drinks
       && drinkCategory.drinks.slice(0, num5).map((category, id) => (
@@ -32,8 +31,7 @@ function Drinks() {
       >
         All
       </button>
-      {loading ? 'Carregando...'
-        : drinks.drinks
+      { drinks.drinks
         && drinks.drinks.slice(0, num12).map((drink, index) => (
           <Link
             to={ `/drinks/${drink.idDrink}` }
