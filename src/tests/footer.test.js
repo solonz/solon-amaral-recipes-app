@@ -22,17 +22,20 @@ describe('teste o componente Footer', () => {
         userEvent.click(drinkButton);
         expect(history.location.pathname).toBe('/drinks');
     });
-
-
-    test('Teste o botão food na página "/drinks"', async () => {
+    
+    test('Teste o botão food na página "/drinks"', () => {
         const { history } = renderWithRouter(<Provider><App /></Provider>);
+
         const emailInput =  screen.getByTestId("email-input");
         userEvent.type(emailInput, 'lalala@gmail.com')
         const passInput =  screen.getByTestId("password-input");
         userEvent.type(passInput, '1234567') 
         const loginButton =  screen.getByTestId("login-submit-btn");
         userEvent.click(loginButton);
-        const foodButton = await screen.findByTestId(/food-bottom/i);
+
+        const drinkButton = screen.getByTestId(/drinks-bottom-btn/i);
+        userEvent.click(drinkButton);
+        const foodButton = screen.getByTestId(/food-bottom/i);
         userEvent.click(foodButton);
         expect(history.location.pathname).toBe('/foods');
     });
