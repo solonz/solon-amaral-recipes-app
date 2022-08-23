@@ -8,7 +8,12 @@ import Provider from '../context/Provider';
 describe('teste o componente Footer', () => {
     test('Teste se o Footer renderiza corretamente', async () => {
         const { history } = renderWithRouter(<Provider><App /></Provider>);
-        history.push('/food');
+        const emailInput =  screen.getByTestId("email-input");
+        userEvent.type(emailInput, 'lalala@gmail.com')
+        const passInput =  screen.getByTestId("password-input");
+        userEvent.type(passInput, '1234567') 
+        const loginButton =  screen.getByTestId("login-submit-btn");
+        userEvent.click(loginButton);
 
         const drinkButton = await screen.findByTestId(/drinks-bottom/i);
         const foodButton = screen.getByTestId(/food-bottom/i);
@@ -16,15 +21,19 @@ describe('teste o componente Footer', () => {
         expect(foodButton).toBeInTheDocument();
         userEvent.click(drinkButton);
         expect(history.location.pathname).toBe('/drinks');
-        
     });
+
 
     test('Teste o botão food na página "/drinks"', async () => {
         const { history } = renderWithRouter(<Provider><App /></Provider>);
-        history.push('/drinks');
-
+        const emailInput =  screen.getByTestId("email-input");
+        userEvent.type(emailInput, 'lalala@gmail.com')
+        const passInput =  screen.getByTestId("password-input");
+        userEvent.type(passInput, '1234567') 
+        const loginButton =  screen.getByTestId("login-submit-btn");
+        userEvent.click(loginButton);
         const foodButton = await screen.findByTestId(/food-bottom/i);
         userEvent.click(foodButton);
         expect(history.location.pathname).toBe('/foods');
-    })
-})
+    });
+});
