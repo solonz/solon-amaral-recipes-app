@@ -5,8 +5,8 @@ import Profile from './Pages/Profile';
 import DoneRecipes from './Pages/DoneRecipes';
 import FavoriteRecipes from './Pages/FavoriteRecipes';
 import './App.css';
-import Details from './Pages/Details';
 import Recipes from './components/Recipes';
+import RecipeDetails from './Pages/RecipeDetails';
 
 function App() {
   return (
@@ -14,8 +14,8 @@ function App() {
       <Route exact path="/" component={ Login } />
       <Route exact path="/foods" component={ Recipes } />
       <Route exact path="/drinks" component={ Recipes } />
-      <Route exact path="/foods/:idMeal" component={ Details } />
-      <Route exact path="/drinks/:idDrink" component={ Details } />
+      <Route exact path="/foods/:idMeal" component={ RecipeDetails } />
+      <Route exact path="/drinks/:idDrink" component={ RecipeDetails } />
       <Route exact path="/foods/:idMeal/in-progress" />
       <Route exact path="/drinks/:idDrink/in-progress" />
       <Route path="/profile" component={ Profile } />

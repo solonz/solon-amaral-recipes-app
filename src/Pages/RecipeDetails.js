@@ -55,10 +55,11 @@ function RecipeDetails() {
             </p>
           ))}
           <p data-testid="instructions">{item.strInstructions}</p>
-          <div data-testid="video">
+          <div>
             <iframe
             // Referência para inserir vídeo embedado: https://thewebdev.info/2021/10/02/how-to-embed-a-youtube-video-into-a-react-app/;
               width="1280"
+              data-testid="video"
               height="720"
               src={ item.strYoutube }
               frameBorder="0"
@@ -66,10 +67,11 @@ function RecipeDetails() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
               allowFullScreen
             />
+            <div data-testid="0-recomendation-card">Card de Recomendação</div>
           </div>
         </div>
         // Inserir aqui a div do Card de Recomendação
-        // <div data-testid="${index}-recomendation-card">Card de Recomendação</div>
+
       ))}
     </section>
   );
