@@ -5,14 +5,21 @@ import mealIcon from '../images/mealIcon.svg';
 
 function Footer() {
   const history = useHistory();
+
   return (
     <div data-testid="footer" className="footer">
       {/* tutorial img em React: https://daveceddia.com/react-image-tag/ */}
-      <button type="button" onClick={ () => history.push('/drinks') }>
+      <button
+        type="button"
+        onClick={ () => { history.push('/drinks'); } }
+      >
         <img src={ drinkItem } alt=" " data-testid="drinks-bottom-btn" />
       </button>
 
-      <button type="button" onClick={ () => history.push('/foods') }>
+      <button
+        type="button"
+        onClick={ () => { history.push('/foods'); } }
+      >
         <img src={ mealIcon } alt=" " data-testid="food-bottom-btn" />
       </button>
     </div>

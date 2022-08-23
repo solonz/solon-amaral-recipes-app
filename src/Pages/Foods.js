@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import Context from '../context/Context';
 
 function Foods() {
-  const { foods, loading, foodCategory,
+  const { foods, foodCategory,
     handleFood, resetFoodsFilter } = useContext(Context);
   const num12 = 12;
   const num5 = 5;
@@ -31,8 +31,7 @@ function Foods() {
       >
         All
       </button>
-      { loading ? 'Carregando...'
-        : foods.meals
+      { foods.meals
         && foods.meals.slice(0, num12).map((food, index) => (
           <Link to={ `/foods/${food.idMeal}` } key={ index }>
             <div data-testid={ `${index}-recipe-card` }>
