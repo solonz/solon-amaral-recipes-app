@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Provider from './context/Provider';
 import Login from './Pages/Login';
 import Profile from './Pages/Profile';
 import DoneRecipes from './Pages/DoneRecipes';
