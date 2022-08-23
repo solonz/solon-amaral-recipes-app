@@ -6,11 +6,12 @@ import Context from '../context/Context';
 
 function Drinks() {
   const { drinks, loading, drinkCategory,
-    drinkByCategory, resetDrinksFilter } = useContext(Context);
+    resetDrinksFilter, handleDrink } = useContext(Context);
   const num12 = 12;
   const num5 = 5;
   return (
     <div>
+      {console.log(drinks)}
       <Header />
       { drinkCategory.drinks
       && drinkCategory.drinks.slice(0, num5).map((category, id) => (
@@ -18,7 +19,7 @@ function Drinks() {
           key={ id }
           data-testid={ `${category.strCategory}-category-filter` }
           type="button"
-          onClick={ () => drinkByCategory(category.strCategory) }
+          onClick={ () => handleDrink(category.strCategory) }
         >
           {category.strCategory}
 
@@ -34,8 +35,8 @@ function Drinks() {
       {loading ? 'Carregando...'
         : drinks.drinks
         && drinks.drinks.slice(0, num12).map((drink, index) => (
-          <div key={ index } data-testid={ `${index}-recipe-card` }>
-            <Link to={ `/drinks/${drink.idDrink}` }>
+          <Link to={ `/drinks/${drink.idDrink}` } key={ index }>
+            <div data-testid={ `${index}-recipe-card` }>
               <img
                 src={ drink.strDrinkThumb }
                 alt=""
@@ -43,8 +44,8 @@ function Drinks() {
                 data-testid={ `${index}-card-img` }
               />
               <p data-testid={ `${index}-card-name` }>{drink.strDrink}</p>
-            </Link>
-          </div>
+            </div>
+          </Link>
         ))}
       <Footer />
     </div>
