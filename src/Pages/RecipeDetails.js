@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// import { Carousel } from 'bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import Context from '../context/Context';
 import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
 // Tentativa conserto de evaluator remoto (esse comentário pode ser apagado).
 
@@ -8,6 +10,9 @@ function RecipeDetails() {
   const [recipe, setRecipe] = useState([]);
   const [measures, setMeasures] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const { drinks, foods } = useContext(Context);
+  const history = useHistory();
+  const num6 = 6;
 
   useEffect(() => {
     if (idMeal) {
@@ -67,11 +72,40 @@ function RecipeDetails() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
               allowFullScreen
             />
-            <div data-testid="0-recomendation-card">Card de Recomendação</div>
+            <section className="carousel">
+              {
+                (((history.location.pathname.includes('foods') && drinks.drinks) || (
+                  history.location.pathname.includes('drinks') && foods.foods)) ? (
+                    drinks.drinks.slice(0, num6).map((drink, id) => (
+                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                        <p
+                          data-testid={ `${id}-recomendation-title` }
+                        >
+                          {drink.strDrink}
+                        </p>
+                        <img
+                          src={ drink.strDrinkThumb }
+                          alt={ drink.strDrink }
+                          className="img-carousel"
+                        />
+                      </div>
+                    ))) : (
+                    foods.meals.slice(0, num6).map((meal, id) => (
+                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                        <p data-testid={ `${id}-recomendation-title` }>{meal.strMeal}</p>
+                        <img
+                          src={ meal.strMealThumb }
+                          alt={ meal.strMeal }
+                          className="img-carousel"
+                        />
+                      </div>
+                    ))
+                  ))
+              }
+            </section>
           </div>
         </div>
         // Inserir aqui a div do Card de Recomendação
-
       ))}
     </section>
   );

@@ -72,9 +72,34 @@
   position: fixed;
 }
 
-.imgFoods {
+.imgFoods, .img {
   height: auto;
   max-height: 140px;
   max-width: 140px;
   width: auto;
+}
+
+.carousel {
+  column-gap: 10px;
+  display: flex;
+  max-width: 100vw;
+  overflow-x: auto;
+}
+
+.img-carousel {
+  width: 30%;
+}
+
+.carousel > div {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  height: 100px;
+  justify-content: center;
+  width: 50%;
+}
+
+iframe {
+  height: 50vw;
+  max-width: 80vw;
 }
