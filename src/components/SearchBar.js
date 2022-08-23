@@ -76,6 +76,7 @@ function SearchBar() {
   async function handleSearchButton() {
     if (searchInput.length > 1 && radio === firstLetter) {
       global.alert('Your search must have only 1 (one) character');
+      return;
     }
     if (radio === 'ingredient') {
       await searchIngredient();

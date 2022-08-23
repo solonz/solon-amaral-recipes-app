@@ -73,8 +73,21 @@
 }
 
 .imgFoods {
+  border-radius: 10px;
   height: auto;
-  max-height: 140px;
-  max-width: 140px;
+  margin-left: 5px;
+  margin-top: 5px;
+  max-height: 150px;
+  max-width: 150px;
+  width: auto;
+}
+
+.imgDrinks {
+  border-radius: 10px;
+  height: auto;
+  margin-left: 5px;
+  margin-top: 5px;
+  max-height: 150px;
+  max-width: 150px;
   width: auto;
 }
