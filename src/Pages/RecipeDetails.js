@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
 
 function RecipeDetails() {
+  const { idMeal, idDrink } = useParams();
   const [recipe, setRecipe] = useState([]);
   const [measures, setMeasures] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    // Referência para capturar pathname da janela atual: https://www.w3schools.com/js/js_window_location.asp;
-    // Referência para fatiar uma string: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/String/slice;
-    const { pathname } = window.location;
-    const baseRoute = pathname.slice(Number('1'), Number('6'));
-    let id = '';
-
-    if (baseRoute === 'foods') {
-      id = pathname.slice(Number('7'));
+    if (idMeal) {
       const waitMeal = async () => {
-        const result = await getMealRecipe(id);
+        const result = await getMealRecipe(idMeal);
         setRecipe(result);
         setMeasures(Object.keys(result[0]).filter((e) => e.includes('strMeasure')));
         setIngredients(Object.keys(result[0]).filter((e) => e.includes('strIngredient')));
@@ -24,10 +19,9 @@ function RecipeDetails() {
       waitMeal();
     }
 
-    if (baseRoute === 'drink') {
-      id = pathname.slice(Number('8'));
+    if (idDrink) {
       const waitDrink = async () => {
-        const result = await getDrinkRecipe(id);
+        const result = await getDrinkRecipe(idDrink);
         setRecipe(result);
         setMeasures(Object.keys(result[0]).filter((e) => e.includes('strMeasure')));
         setIngredients(Object.keys(result[0]).filter((e) => e.includes('strIngredient')));
