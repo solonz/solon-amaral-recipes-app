@@ -10,6 +10,7 @@ function Provider({ children }) {
   const [loading, setLoading] = useState(true);
   const [foodCategory, setFoodCategory] = useState([]);
   const [drinkCategory, setDrinkCategory] = useState([]);
+  const [filter, setFilter] = useState(false);
 
   const foodAPI = async () => {
     setLoading(true);
@@ -66,11 +67,21 @@ function Provider({ children }) {
     try {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
       const data = await response.json();
-      setFoods(data);
+      if (filter) {
+        setFoods(newFoods);
+      } else {
+        setFoods(data);
+      }
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
+    setFilter(!filter);
+  };
+
+  const handleFood = (category) => {
+    setFilter(!filter);
+    foodByCategory(category);
   };
 
   const drinkByCategory = async (category) => {
@@ -78,11 +89,21 @@ function Provider({ children }) {
     try {
       const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category}`);
       const data = await response.json();
-      setDrinks(data);
+      if (filter) {
+        setDrinks(newDrinks);
+      } else {
+        setDrinks(data);
+      }
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
+    setFilter(!filter);
+  };
+
+  const handleDrink = (category) => {
+    setFilter(!filter);
+    drinkByCategory(category);
   };
 
   const resetFoodsFilter = () => {
@@ -114,6 +135,10 @@ function Provider({ children }) {
     drinkByCategory,
     resetFoodsFilter,
     resetDrinksFilter,
+    filter,
+    setFilter,
+    handleFood,
+    handleDrink,
   };
 
   return (
