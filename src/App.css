@@ -103,3 +103,9 @@ iframe {
   height: 50vw;
   max-width: 80vw;
 }
+
+.start-recipe {
+  bottom: 0;
+  position: fixed;
+  right: 10px;
+}

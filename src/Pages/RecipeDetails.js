@@ -104,6 +104,13 @@ function RecipeDetails() {
               }
             </section>
           </div>
+          <button
+            type="button"
+            data-testid="start-recipe-btn"
+            className="start-recipe"
+          >
+            Start Recipe
+          </button>
         </div>
         // Inserir aqui a div do Card de Recomendação
       ))}
