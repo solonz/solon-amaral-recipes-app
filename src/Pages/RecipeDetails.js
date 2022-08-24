@@ -1,20 +1,41 @@
 // import { Carousel } from 'bootstrap';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import Context from '../context/Context';
 import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
-// Tentativa conserto de evaluator remoto (esse comentário pode ser apagado).
 
 function RecipeDetails() {
   const { idMeal, idDrink } = useParams();
   const [recipe, setRecipe] = useState([]);
   const [measures, setMeasures] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [isDisabled, setisDisabled] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
   const { drinks, foods } = useContext(Context);
   const history = useHistory();
   const num6 = 6;
 
   useEffect(() => {
+    const getLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
+    const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    console.log(inProgressList);
+
+    if (inProgressList !== null) {
+      const cocktailsIDs = Object.keys(inProgressList.cocktails).includes(idDrink);
+      const mealsIDs = Object.keys(inProgressList.meals).includes(idMeal);
+      console.log(cocktailsIDs);
+      console.log(mealsIDs);
+      if (cocktailsIDs || mealsIDs) {
+        setInProgress(true);
+      }
+    }
+
+    if (getLocalStorage !== null) {
+      const checkID = getLocalStorage.some(({ id }) => id === idMeal || id === idDrink);
+      if (checkID === true) {
+        setisDisabled(true);
+      }
+    }
     if (idMeal) {
       const waitMeal = async () => {
         const result = await getMealRecipe(idMeal);
@@ -35,6 +56,46 @@ function RecipeDetails() {
       waitDrink();
     }
   }, []);
+
+  const setInProgess = () => {
+    const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (inProgressList === null && idDrink) {
+      const newBigObjCocktails = {
+        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
+        cocktails: { [idDrink]: ['teste1', 'testinho1'] },
+        meals: { },
+      };
+      const stringified = JSON.stringify(newBigObjCocktails);
+      localStorage.setItem('inProgressRecipes', stringified);
+    }
+    if (inProgressList === null && idMeal) {
+      const newBigObjMeals = {
+        cocktails: { },
+        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
+        meals: { [idMeal]: ['teste2', 'testinho2'] },
+      };
+      const stringified = JSON.stringify(newBigObjMeals);
+      localStorage.setItem('inProgressRecipes', stringified);
+    }
+    if (inProgressList !== null && idDrink) {
+      const bigObjCocktails = {
+        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
+        cocktails: { ...inProgressList.cocktails, [idDrink]: ['teste3', 'testinho3'] },
+        meals: { ...inProgressList.meals },
+      };
+      const stringified = JSON.stringify(bigObjCocktails);
+      localStorage.setItem('inProgressRecipes', stringified);
+    }
+    if (inProgressList !== null && idMeal) {
+      const bigObjMeals = {
+        cocktails: { ...inProgressList.cocktails },
+        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
+        meals: { ...inProgressList.meals, [idMeal]: ['teste4', 'testinho4'] },
+      };
+      const stringified = JSON.stringify(bigObjMeals);
+      localStorage.setItem('inProgressRecipes', stringified);
+    }
+  };
 
   return (
     <section>
@@ -104,15 +165,18 @@ function RecipeDetails() {
               }
             </section>
           </div>
-          <button
-            type="button"
-            data-testid="start-recipe-btn"
-            className="start-recipe"
-          >
-            Start Recipe
-          </button>
+          <Link to={ `${history.location.pathname}/in-progress` }>
+            <button
+              type="button"
+              data-testid="start-recipe-btn"
+              className="start-recipe"
+              disabled={ isDisabled }
+              onClick={ setInProgess }
+            >
+              { inProgress ? 'Continue Recipe' : 'Start Recipe' }
+            </button>
+          </Link>
         </div>
-        // Inserir aqui a div do Card de Recomendação
       ))}
     </section>
   );
