@@ -11,6 +11,7 @@ function Provider({ children }) {
   const [foodCategory, setFoodCategory] = useState([]);
   const [drinkCategory, setDrinkCategory] = useState([]);
   const [filter, setFilter] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const foodAPI = async () => {
     setLoading(true);
@@ -139,6 +140,8 @@ function Provider({ children }) {
     setFilter,
     handleFood,
     handleDrink,
+    copied,
+    setCopied,
   };
 
   return (

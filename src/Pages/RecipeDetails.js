@@ -4,6 +4,8 @@ import { useHistory, useParams, Link } from 'react-router-dom';
 import Context from '../context/Context';
 import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
 
+const copy = require('clipboard-copy');
+
 function RecipeDetails() {
   const { idMeal, idDrink } = useParams();
   const [recipe, setRecipe] = useState([]);
@@ -11,7 +13,7 @@ function RecipeDetails() {
   const [ingredients, setIngredients] = useState([]);
   const [isDisabled, setisDisabled] = useState(false);
   const [inProgress, setInProgress] = useState(false);
-  const { drinks, foods } = useContext(Context);
+  const { drinks, foods, copied, setCopied } = useContext(Context);
   const history = useHistory();
   const num6 = 6;
 
@@ -105,6 +107,11 @@ function RecipeDetails() {
     }
   };
 
+  const copyContent = () => {
+    copy(window.location.href);
+    setCopied(true);
+  };
+
   return (
     <section>
       { recipe.map((item, index) => (
@@ -145,8 +152,9 @@ function RecipeDetails() {
               <button
                 type="button"
                 data-testid="share-btn"
+                onClick={ copyContent }
               >
-                Share
+                { (copied) ? 'Link copied!' : 'Share' }
               </button>
               <button
                 type="button"
