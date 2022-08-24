@@ -15,20 +15,29 @@ function RecipeDetails() {
   const history = useHistory();
   const num6 = 6;
 
-  useEffect(() => {
-    const getLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
+  const getFromLocal = () => {
     const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
     console.log(inProgressList);
 
     if (inProgressList !== null) {
-      const cocktailsIDs = Object.keys(inProgressList.cocktails).includes(idDrink);
-      const mealsIDs = Object.keys(inProgressList.meals).includes(idMeal);
-      console.log(cocktailsIDs);
-      console.log(mealsIDs);
-      if (cocktailsIDs || mealsIDs) {
+      let a = false;
+      let b = false;
+      if (inProgressList.cocktails !== null && inProgressList.cocktails !== undefined) {
+        a = Object.keys(inProgressList.cocktails).includes(idDrink);
+      }
+      if (inProgressList.meals !== null && inProgressList.cocktails !== undefined) {
+        b = Object.keys(inProgressList.meals).includes(idMeal);
+      }
+      if (a || b) {
         setInProgress(true);
       }
     }
+  };
+
+  useEffect(() => {
+    getFromLocal();
+
+    const getLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
 
     if (getLocalStorage !== null) {
       const checkID = getLocalStorage.some(({ id }) => id === idMeal || id === idDrink);
@@ -55,7 +64,7 @@ function RecipeDetails() {
       };
       waitDrink();
     }
-  }, []);
+  }, [idDrink, idMeal]);
 
   const setInProgess = () => {
     const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -176,6 +185,18 @@ function RecipeDetails() {
               { inProgress ? 'Continue Recipe' : 'Start Recipe' }
             </button>
           </Link>
+          <button
+            type="button"
+            data-testid="share-btn"
+          >
+            Share
+          </button>
+          <button
+            type="button"
+            data-testid="favorite-btn"
+          >
+            Favorite
+          </button>
         </div>
       ))}
     </section>
