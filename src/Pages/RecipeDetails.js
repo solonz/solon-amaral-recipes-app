@@ -17,7 +17,6 @@ function RecipeDetails() {
 
   const getFromLocal = () => {
     const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    console.log(inProgressList);
 
     if (inProgressList !== null) {
       let a = false;
@@ -119,7 +118,7 @@ function RecipeDetails() {
           <img
             src={ item.strMealThumb ? item.strMealThumb : item.strDrinkThumb }
             alt={ item.strMeal ? item.strMeal : item.strDrink }
-            width="400px"
+            width="300px"
             data-testid="recipe-photo"
           />
           { measures.map((_, i) => (
@@ -142,6 +141,20 @@ function RecipeDetails() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
               allowFullScreen
             />
+            <div>
+              <button
+                type="button"
+                data-testid="share-btn"
+              >
+                Share
+              </button>
+              <button
+                type="button"
+                data-testid="favorite-btn"
+              >
+                Favorite
+              </button>
+            </div>
             <section className="carousel">
               {
                 (((history.location.pathname.includes('foods') && drinks.drinks) || (
@@ -174,29 +187,19 @@ function RecipeDetails() {
               }
             </section>
           </div>
-          <Link to={ `${history.location.pathname}/in-progress` }>
-            <button
-              type="button"
-              data-testid="start-recipe-btn"
-              className="start-recipe"
-              disabled={ isDisabled }
-              onClick={ setInProgess }
-            >
-              { inProgress ? 'Continue Recipe' : 'Start Recipe' }
-            </button>
-          </Link>
-          <button
-            type="button"
-            data-testid="share-btn"
-          >
-            Share
-          </button>
-          <button
-            type="button"
-            data-testid="favorite-btn"
-          >
-            Favorite
-          </button>
+          <div className="div-button">
+            <Link to={ `${history.location.pathname}/in-progress` }>
+              <button
+                type="button"
+                data-testid="start-recipe-btn"
+                className="start-recipe"
+                disabled={ isDisabled }
+                onClick={ setInProgess }
+              >
+                { inProgress ? 'Continue Recipe' : 'Continue Recipe' }
+              </button>
+            </Link>
+          </div>
         </div>
       ))}
     </section>
