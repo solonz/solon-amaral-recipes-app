@@ -129,6 +129,7 @@ function Provider({ children }) {
     drinks,
     setDrinks,
     loading,
+    setLoading,
     foodCategory,
     drinkCategory,
     setDrinkCategory,

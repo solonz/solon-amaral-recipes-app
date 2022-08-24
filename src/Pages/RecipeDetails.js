@@ -13,7 +13,7 @@ function RecipeDetails() {
   const [ingredients, setIngredients] = useState([]);
   const [isDisabled, setisDisabled] = useState(false);
   const [inProgress, setInProgress] = useState(false);
-  const { drinks, foods, copied, setCopied } = useContext(Context);
+  const { drinks, foods, copied, setCopied, loading, setLoading } = useContext(Context);
   const history = useHistory();
   const num6 = 6;
 
@@ -33,9 +33,11 @@ function RecipeDetails() {
         setInProgress(true);
       }
     }
+    setLoading(false);
   };
 
   useEffect(() => {
+    setLoading(true);
     getFromLocal();
 
     const getLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
@@ -72,7 +74,7 @@ function RecipeDetails() {
     if (inProgressList === null && idDrink) {
       const newBigObjCocktails = {
         // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
-        cocktails: { [idDrink]: ['teste1', 'testinho1'] },
+        cocktails: { [idDrink]: [] },
         meals: { },
       };
       const stringified = JSON.stringify(newBigObjCocktails);
@@ -82,7 +84,7 @@ function RecipeDetails() {
       const newBigObjMeals = {
         cocktails: { },
         // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
-        meals: { [idMeal]: ['teste2', 'testinho2'] },
+        meals: { [idMeal]: [] },
       };
       const stringified = JSON.stringify(newBigObjMeals);
       localStorage.setItem('inProgressRecipes', stringified);
@@ -128,7 +130,6 @@ function RecipeDetails() {
     }
     if (idDrink) {
       const filt = drinks.drinks.filter((a) => a.idDrink === idDrink);
-      console.log(filt);
       const drink = filt[0];
       const objDrink = [{ id: idDrink,
         type: 'drink',
@@ -143,105 +144,112 @@ function RecipeDetails() {
   };
 
   return (
-    <section>
-      { recipe.map((item, index) => (
-        <div key={ index }>
-          <h1 data-testid="recipe-title">
-            { item.strMeal ? item.strMeal : item.strDrink }
-          </h1>
-          <h3 data-testid="recipe-category">
-            {item.strAlcoholic ? item.strAlcoholic : item.strCategory}
-          </h3>
-          <img
-            src={ item.strMealThumb ? item.strMealThumb : item.strDrinkThumb }
-            alt={ item.strMeal ? item.strMeal : item.strDrink }
-            width="300px"
-            data-testid="recipe-photo"
-          />
-          { measures.map((_, i) => (
-            <p key={ i } data-testid={ `${i}-ingredient-name-and-measure` }>
-              { item[measures[i]] !== '' && item[measures[i]] }
-              { ' ' }
-              { item[ingredients[i]] !== '' && item[ingredients[i]] }
-            </p>
-          ))}
-          <p data-testid="instructions">{item.strInstructions}</p>
-          <div>
-            <iframe
-            // Referência para inserir vídeo embedado: https://thewebdev.info/2021/10/02/how-to-embed-a-youtube-video-into-a-react-app/;
-              width="1280"
-              data-testid="video"
-              height="720"
-              src={ item.strYoutube }
-              frameBorder="0"
-              title={ item.strMeal ? item.strMeal : item.strDrink }
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
-              allowFullScreen
-            />
-            <div>
-              <button
-                type="button"
-                data-testid="share-btn"
-                onClick={ copyContent }
-              >
-                { (copied) ? 'Link copied!' : 'Share' }
-              </button>
-              <button
-                type="button"
-                data-testid="favorite-btn"
-                onClick={ handleFavorite }
-              >
-                Favorite
-              </button>
+    <div>
+      {loading ? <h1>Carregando...</h1> : (
+        <section>
+          { recipe.map((item, index) => (
+            <div key={ index }>
+              <h1 data-testid="recipe-title">
+                { item.strMeal ? item.strMeal : item.strDrink }
+              </h1>
+              <h3 data-testid="recipe-category">
+                {item.strAlcoholic ? item.strAlcoholic : item.strCategory}
+              </h3>
+              <img
+                src={ item.strMealThumb ? item.strMealThumb : item.strDrinkThumb }
+                alt={ item.strMeal ? item.strMeal : item.strDrink }
+                width="300px"
+                data-testid="recipe-photo"
+              />
+              { measures.map((_, i) => (
+                <p key={ i } data-testid={ `${i}-ingredient-name-and-measure` }>
+                  { item[measures[i]] !== '' && item[measures[i]] }
+                  { ' ' }
+                  { item[ingredients[i]] !== '' && item[ingredients[i]] }
+                </p>
+              ))}
+              <p data-testid="instructions">{item.strInstructions}</p>
+              <div>
+                <iframe
+                  // Referência para inserir vídeo embedado: https://thewebdev.info/2021/10/02/how-to-embed-a-youtube-video-into-a-react-app/;
+                  width="1280"
+                  data-testid="video"
+                  height="720"
+                  src={ item.strYoutube }
+                  frameBorder="0"
+                  title={ item.strMeal ? item.strMeal : item.strDrink }
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
+                  allowFullScreen
+                />
+                <div>
+                  <button
+                    type="button"
+                    data-testid="share-btn"
+                    onClick={ copyContent }
+                  >
+                    { (copied) ? 'Link copied!' : 'Share' }
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="favorite-btn"
+                    onClick={ handleFavorite }
+                  >
+                    Favorite
+                  </button>
+                </div>
+                <section className="carousel">
+                  {
+                    (((history.location.pathname.includes('foods') && drinks.drinks) || (
+                      history.location.pathname.includes('drinks') && foods.foods)) ? (
+                        drinks.drinks.slice(0, num6).map((drink, id) => (
+                          <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                            <p
+                              data-testid={ `${id}-recomendation-title` }
+                            >
+                              {drink.strDrink}
+                            </p>
+                            <img
+                              src={ drink.strDrinkThumb }
+                              alt={ drink.strDrink }
+                              className="img-carousel"
+                            />
+                          </div>
+                        ))) : (
+                        foods.meals.slice(0, num6).map((meal, id) => (
+                          <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                            <p data-testid={ `${id}-recomendation-title` }>
+                              {meal.strMeal}
+
+                            </p>
+                            <img
+                              src={ meal.strMealThumb }
+                              alt={ meal.strMeal }
+                              className="img-carousel"
+                            />
+                          </div>
+                        ))
+                      ))
+                  }
+                </section>
+              </div>
+              <div className="div-button">
+                <Link to={ `${history.location.pathname}/in-progress` }>
+                  <button
+                    type="button"
+                    data-testid="start-recipe-btn"
+                    className="start-recipe"
+                    disabled={ isDisabled }
+                    onClick={ setInProgess }
+                  >
+                    { inProgress ? 'Continue Recipe' : 'Start Recipe' }
+                  </button>
+                </Link>
+              </div>
             </div>
-            <section className="carousel">
-              {
-                (((history.location.pathname.includes('foods') && drinks.drinks) || (
-                  history.location.pathname.includes('drinks') && foods.foods)) ? (
-                    drinks.drinks.slice(0, num6).map((drink, id) => (
-                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                        <p
-                          data-testid={ `${id}-recomendation-title` }
-                        >
-                          {drink.strDrink}
-                        </p>
-                        <img
-                          src={ drink.strDrinkThumb }
-                          alt={ drink.strDrink }
-                          className="img-carousel"
-                        />
-                      </div>
-                    ))) : (
-                    foods.meals.slice(0, num6).map((meal, id) => (
-                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                        <p data-testid={ `${id}-recomendation-title` }>{meal.strMeal}</p>
-                        <img
-                          src={ meal.strMealThumb }
-                          alt={ meal.strMeal }
-                          className="img-carousel"
-                        />
-                      </div>
-                    ))
-                  ))
-              }
-            </section>
-          </div>
-          <div className="div-button">
-            <Link to={ `${history.location.pathname}/in-progress` }>
-              <button
-                type="button"
-                data-testid="start-recipe-btn"
-                className="start-recipe"
-                disabled={ isDisabled }
-                onClick={ setInProgess }
-              >
-                { inProgress ? 'Continue Recipe' : 'Continue Recipe' }
-              </button>
-            </Link>
-          </div>
-        </div>
-      ))}
-    </section>
+          ))}
+        </section>
+      )}
+    </div>
   );
 }
 
