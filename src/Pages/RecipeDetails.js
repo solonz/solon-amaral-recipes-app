@@ -112,6 +112,36 @@ function RecipeDetails() {
     setCopied(true);
   };
 
+  const handleFavorite = () => {
+    if (idMeal) {
+      const filt = foods.meals.filter((a) => a.idMeal === idMeal);
+      const food = filt[0];
+      const objFood = { id: idMeal,
+        type: 'food',
+        nationality: food.strArea,
+        category: food.strCategory,
+        alcoholicOrNot: '',
+        name: food.strMeal,
+        image: food.strMealThumb };
+      const fav = JSON.stringify(objFood);
+      localStorage.setItem('favoriteRecipes', fav);
+    }
+    if (idDrink) {
+      const filt = drinks.drinks.filter((a) => a.idDrink === idDrink);
+      console.log(filt);
+      const drink = filt[0];
+      const objDrink = [{ id: idDrink,
+        type: 'drink',
+        nationality: '',
+        category: drink.strCategory,
+        alcoholicOrNot: drink.strAlcoholic,
+        name: drink.strDrink,
+        image: drink.strDrinkThumb }];
+      const fav = JSON.stringify(...objDrink);
+      localStorage.setItem('favoriteRecipes', fav);
+    }
+  };
+
   return (
     <section>
       { recipe.map((item, index) => (
@@ -159,6 +189,7 @@ function RecipeDetails() {
               <button
                 type="button"
                 data-testid="favorite-btn"
+                onClick={ handleFavorite }
               >
                 Favorite
               </button>
