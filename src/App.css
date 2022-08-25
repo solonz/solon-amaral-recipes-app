@@ -1,3 +1,19 @@
+* {
+  box-sizing: 0;
+  margin: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-size: 18px;
+  margin: 0 auto;
+  max-width: 360px;
+  padding: 0;
+}
+
 .meals {
   align-items: center;
   background: #0fa36b;
@@ -107,5 +123,8 @@ iframe {
 .start-recipe {
   bottom: 0;
   position: fixed;
-  right: 10px;
+}
+
+.div-button {
+  text-align: center;
 }

@@ -1,100 +1,130 @@
 // import { Carousel } from 'bootstrap';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom';
 import Context from '../context/Context';
-import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+
+const copy = require('clipboard-copy');
 
 function RecipeDetails() {
   const { idMeal, idDrink } = useParams();
-  const [recipe, setRecipe] = useState([]);
-  const [measures, setMeasures] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
-  const [isDisabled, setisDisabled] = useState(false);
-  const [inProgress, setInProgress] = useState(false);
-  const { drinks, foods } = useContext(Context);
+  const { drinks,
+    foods,
+    copied,
+    setCopied,
+    waitMeal,
+    waitDrink,
+    recipe,
+    measures,
+    ingredients,
+    isDone,
+    inProgress,
+    isFavorite } = useContext(Context);
   const history = useHistory();
   const num6 = 6;
 
   useEffect(() => {
-    const getLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
-    const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    console.log(inProgressList);
-
-    if (inProgressList !== null) {
-      const cocktailsIDs = Object.keys(inProgressList.cocktails).includes(idDrink);
-      const mealsIDs = Object.keys(inProgressList.meals).includes(idMeal);
-      console.log(cocktailsIDs);
-      console.log(mealsIDs);
-      if (cocktailsIDs || mealsIDs) {
-        setInProgress(true);
+    const getRecipeDetails = () => {
+      const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const doneRecipesList = JSON.parse(localStorage.getItem('doneRecipes'));
+      const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (idMeal) {
+        waitMeal(idMeal, inProgressList, doneRecipesList, favoritesList);
       }
-    }
-
-    if (getLocalStorage !== null) {
-      const checkID = getLocalStorage.some(({ id }) => id === idMeal || id === idDrink);
-      if (checkID === true) {
-        setisDisabled(true);
+      if (idDrink) {
+        waitDrink(idDrink, inProgressList, doneRecipesList, favoritesList);
       }
-    }
-    if (idMeal) {
-      const waitMeal = async () => {
-        const result = await getMealRecipe(idMeal);
-        setRecipe(result);
-        setMeasures(Object.keys(result[0]).filter((e) => e.includes('strMeasure')));
-        setIngredients(Object.keys(result[0]).filter((e) => e.includes('strIngredient')));
-      };
-      waitMeal();
-    }
-
-    if (idDrink) {
-      const waitDrink = async () => {
-        const result = await getDrinkRecipe(idDrink);
-        setRecipe(result);
-        setMeasures(Object.keys(result[0]).filter((e) => e.includes('strMeasure')));
-        setIngredients(Object.keys(result[0]).filter((e) => e.includes('strIngredient')));
-      };
-      waitDrink();
-    }
+    };
+    getRecipeDetails();
   }, []);
 
-  const setInProgess = () => {
+  const saveThisProgress = () => {
     const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    if (inProgressList === null && idDrink) {
-      const newBigObjCocktails = {
-        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
-        cocktails: { [idDrink]: ['teste1', 'testinho1'] },
-        meals: { },
-      };
-      const stringified = JSON.stringify(newBigObjCocktails);
-      localStorage.setItem('inProgressRecipes', stringified);
+    if (inProgressList === null) {
+      if (idMeal) {
+        const firstMeal = { cocktails: { }, meals: { [idMeal]: [] } };
+        localStorage.setItem('inProgressRecipes', JSON.stringify(firstMeal));
+      }
+      if (idDrink) {
+        const firstCocktail = { cocktails: { [idDrink]: [] }, meals: { } };
+        localStorage.setItem('inProgressRecipes', JSON.stringify(firstCocktail));
+      }
     }
-    if (inProgressList === null && idMeal) {
-      const newBigObjMeals = {
-        cocktails: { },
-        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
-        meals: { [idMeal]: ['teste2', 'testinho2'] },
-      };
-      const stringified = JSON.stringify(newBigObjMeals);
-      localStorage.setItem('inProgressRecipes', stringified);
+    if (inProgressList !== null) {
+      if (idMeal) {
+        const anotherMeal = {
+          cocktails: { ...inProgressList.cocktails },
+          meals: { ...inProgressList.meals, [idMeal]: [] },
+        };
+        localStorage.setItem('inProgressRecipes', JSON.stringify(anotherMeal));
+      }
+      if (idDrink) {
+        const anotherCocktail = {
+          cocktails: { ...inProgressList.cocktails, [idDrink]: [] },
+          meals: { ...inProgressList.meals },
+        };
+        localStorage.setItem('inProgressRecipes', JSON.stringify(anotherCocktail));
+      }
     }
-    if (inProgressList !== null && idDrink) {
-      const bigObjCocktails = {
-        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
-        cocktails: { ...inProgressList.cocktails, [idDrink]: ['teste3', 'testinho3'] },
-        meals: { ...inProgressList.meals },
-      };
-      const stringified = JSON.stringify(bigObjCocktails);
-      localStorage.setItem('inProgressRecipes', stringified);
+  };
+
+  const copyContent = () => { copy(window.location.href); setCopied(true); };
+
+  const createNewArray = () => {
+    if (idMeal) {
+      const objFood = [{ id: idMeal,
+        type: 'food',
+        nationality: recipe[0].strArea,
+        category: recipe[0].strCategory,
+        alcoholicOrNot: '',
+        name: recipe[0].strMeal,
+        image: recipe[0].strMealThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objFood));
     }
-    if (inProgressList !== null && idMeal) {
-      const bigObjMeals = {
-        cocktails: { ...inProgressList.cocktails },
-        // O array com as strings abaixo é só um teste, é necessério que esse array tenha outras infos específicas da receita (as infos são solicitadas pelo readme)
-        meals: { ...inProgressList.meals, [idMeal]: ['teste4', 'testinho4'] },
-      };
-      const stringified = JSON.stringify(bigObjMeals);
-      localStorage.setItem('inProgressRecipes', stringified);
+    if (idDrink) {
+      const objDrink = [{ id: idDrink,
+        type: 'drink',
+        nationality: recipe[0].strArea ? recipe[0].strArea : '',
+        category: recipe[0].strCategory,
+        alcoholicOrNot: recipe[0].strAlcoholic,
+        name: recipe[0].strDrink,
+        image: recipe[0].strDrinkThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objDrink));
     }
+  };
+
+  const refreshTheArray = (favoritesList) => {
+    if (idMeal) {
+      const objFood = [
+        ...favoritesList,
+        { id: idMeal,
+          type: 'food',
+          nationality: recipe[0].strArea,
+          category: recipe[0].strCategory,
+          alcoholicOrNot: '',
+          name: recipe[0].strMeal,
+          image: recipe[0].strMealThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objFood));
+    }
+    if (idDrink) {
+      const objDrink = [
+        ...favoritesList,
+        { id: idDrink,
+          type: 'drink',
+          nationality: recipe[0].strArea,
+          category: recipe[0].strCategory,
+          alcoholicOrNot: recipe[0].strAlcoholic,
+          name: recipe[0].strDrink,
+          image: recipe[0].strDrinkThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objDrink));
+    }
+  };
+
+  const handleFavorite = () => {
+    const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (favoritesList === null) { createNewArray(); }
+    if (favoritesList !== null) { refreshTheArray(favoritesList); }
   };
 
   return (
@@ -110,7 +140,7 @@ function RecipeDetails() {
           <img
             src={ item.strMealThumb ? item.strMealThumb : item.strDrinkThumb }
             alt={ item.strMeal ? item.strMeal : item.strDrink }
-            width="400px"
+            width="300px"
             data-testid="recipe-photo"
           />
           { measures.map((_, i) => (
@@ -121,61 +151,81 @@ function RecipeDetails() {
             </p>
           ))}
           <p data-testid="instructions">{item.strInstructions}</p>
-          <div>
-            <iframe
+          <iframe
             // Referência para inserir vídeo embedado: https://thewebdev.info/2021/10/02/how-to-embed-a-youtube-video-into-a-react-app/;
-              width="1280"
-              data-testid="video"
-              height="720"
-              src={ item.strYoutube }
-              frameBorder="0"
-              title={ item.strMeal ? item.strMeal : item.strDrink }
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
-              allowFullScreen
-            />
-            <section className="carousel">
-              {
-                (((history.location.pathname.includes('foods') && drinks.drinks) || (
-                  history.location.pathname.includes('drinks') && foods.foods)) ? (
-                    drinks.drinks.slice(0, num6).map((drink, id) => (
-                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                        <p
-                          data-testid={ `${id}-recomendation-title` }
-                        >
-                          {drink.strDrink}
-                        </p>
-                        <img
-                          src={ drink.strDrinkThumb }
-                          alt={ drink.strDrink }
-                          className="img-carousel"
-                        />
-                      </div>
-                    ))) : (
-                    foods.meals.slice(0, num6).map((meal, id) => (
-                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                        <p data-testid={ `${id}-recomendation-title` }>{meal.strMeal}</p>
-                        <img
-                          src={ meal.strMealThumb }
-                          alt={ meal.strMeal }
-                          className="img-carousel"
-                        />
-                      </div>
-                    ))
-                  ))
-              }
-            </section>
-          </div>
-          <Link to={ `${history.location.pathname}/in-progress` }>
+            width="1280"
+            data-testid="video"
+            height="720"
+            src={ item.strYoutube }
+            frameBorder="0"
+            title={ item.strMeal ? item.strMeal : item.strDrink }
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
+            allowFullScreen
+          />
+          <div>
             <button
               type="button"
-              data-testid="start-recipe-btn"
-              className="start-recipe"
-              disabled={ isDisabled }
-              onClick={ setInProgess }
+              data-testid="share-btn"
+              onClick={ copyContent }
             >
-              { inProgress ? 'Continue Recipe' : 'Start Recipe' }
+              { (copied) ? 'Link copied!' : 'Share' }
             </button>
-          </Link>
+            <button
+              type="button"
+              onClick={ handleFavorite }
+            >
+              <img
+                data-testid="favorite-btn"
+                src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+                alt=""
+              />
+            </button>
+          </div>
+          <section className="carousel">
+            {
+              (((history.location.pathname.includes('foods') && drinks.drinks) || (
+                history.location.pathname.includes('drinks') && foods.foods)) ? (
+                  drinks.drinks.slice(0, num6).map((drink, id) => (
+                    <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                      <p data-testid={ `${id}-recomendation-title` }>
+                        {drink.strDrink}
+                      </p>
+                      <img
+                        src={ drink.strDrinkThumb }
+                        alt={ drink.strDrink }
+                        className="img-carousel"
+                      />
+                    </div>
+                  ))) : (
+                  foods.meals.slice(0, num6).map((meal, id) => (
+                    <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                      <p data-testid={ `${id}-recomendation-title` }>
+                        {meal.strMeal}
+                      </p>
+                      <img
+                        src={ meal.strMealThumb }
+                        alt={ meal.strMeal }
+                        className="img-carousel"
+                      />
+                    </div>
+                  ))
+                ))
+            }
+          </section>
+          { isDone === false && (
+            <div className="div-button">
+              <Link to={ `${history.location.pathname}/in-progress` }>
+                <button
+                  type="button"
+                  data-testid="start-recipe-btn"
+                  className="start-recipe"
+                  onClick={ saveThisProgress }
+                >
+                  { inProgress ? 'Continue Recipe' : 'Start Recipe' }
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       ))}
     </section>
