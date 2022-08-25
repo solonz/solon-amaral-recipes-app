@@ -6,24 +6,7 @@ import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
 function RecipeInProgress() {
   const { idMeal, idDrink } = useParams();
   const [recipe, setRecipe] = useState([]);
-  const [arrRecipes, setArrRecipes] = useState([]);
-  const { foods, drinks } = useContext(Context);
-
-  const renderRecipes = (id) => {
-    const recipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    if (id === idMeal && idMeal) {
-      const comidas = Object.keys(recipes.meals);
-      const arrComidas = comidas.map((elt) => (
-        foods.meals.find((food) => food.idMeal === elt)));
-      setArrRecipes(arrComidas);
-    }
-    if (id === idDrink && idDrink) {
-      const bebidas = Object.keys(recipes.cocktails);
-      const arrBebidas = bebidas.map((elt) => (
-        drinks.drinks.find((dr) => dr.idDrink === elt)));
-      setArrRecipes(arrBebidas);
-    }
-  };
+  const { measures, ingredients } = useContext(Context);
 
   useEffect(() => {
     const getRecipeInProgressDetails = () => {
@@ -33,14 +16,12 @@ function RecipeInProgress() {
           setRecipe(data[0]);
         };
         waitMealInProgress();
-        renderRecipes(idMeal);
       }
       if (idDrink) {
         const waitDrinkInProgress = async () => {
           const data = await getDrinkRecipe(idDrink);
           setRecipe(data[0]);
         };
-        renderRecipes(idDrink);
         waitDrinkInProgress();
       }
     };
@@ -121,41 +102,54 @@ function RecipeInProgress() {
   return (
     <div>
       <h1>In Progress</h1>
-      { arrRecipes.map((rec, id) => (
-        <div key={ id }>
-          <h2 data-testid="recipe-title">{rec.strMeal || rec.strDrink }</h2>
-          <img
-            alt=""
-            width="300px"
-            data-testid="recipe-photo"
-            src={ rec.strDrinkThumb || rec.strMealThumb }
-          />
-          <h4
-            data-testid="recipe-category"
-          >
-            { rec.strMeal ? rec.strCategory : '' }
-          </h4>
-          <h5>Ingredients</h5>
-          <ul>
-            {}
-          </ul>
-          <button
-            type="button"
-            data-testid="share-btn"
-          >
-            Share
-          </button>
-          <button
-            type="button"
-            data-testid="favorite-btn"
-          >
-            Favorite
-          </button>
-          <button type="button" onClick={ setDone } data-testid="finish-recipe-btn">
-            Finish Recipe
-          </button>
-        </div>
-      )) }
+      {console.log(ingredients)}
+      {
+        measures
+        && (
+          <div>
+            <h2 data-testid="recipe-title">{recipe.strMeal || recipe.strDrink }</h2>
+            <img
+              alt=""
+              width="300px"
+              data-testid="recipe-photo"
+              src={ recipe.strDrinkThumb || recipe.strMealThumb }
+            />
+            <h4
+              data-testid="recipe-category"
+            >
+              { recipe.strMeal ? recipe.strCategory : '' }
+            </h4>
+            <h5>Ingredients</h5>
+            { measures.map((_, i) => (
+              <div key={ i }>
+                {ingredients
+                && (
+                  <p data-testid={ `${i}-ingredient-step` }>
+                    { recipe[measures[i]] !== '' && recipe[measures[i]] }
+                    { ' ' }
+                    { recipe[ingredients[i]] !== '' && recipe[ingredients[i]] }
+                  </p>)}
+              </div>
+            ))}
+            <p>{recipe.strInstructions}</p>
+            <button
+              type="button"
+              data-testid="share-btn"
+            >
+              Share
+            </button>
+            <button
+              type="button"
+              data-testid="favorite-btn"
+            >
+              Favorite
+            </button>
+            <button type="button" onClick={ setDone } data-testid="finish-recipe-btn">
+              Finish Recipe
+            </button>
+          </div>)
+      }
+
     </div>
   );
 }
