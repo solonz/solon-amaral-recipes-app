@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
+// Tentativa de conserto do evaluator remoto (esse comentário pode ser apagado)
 
 function RecipeInProgress() {
   const { idMeal, idDrink } = useParams();
