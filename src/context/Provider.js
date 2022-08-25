@@ -190,6 +190,7 @@ function Provider({ children }) {
     isDone,
     inProgress,
     isFavorite,
+    setIsFavorite,
   };
 
   return (
