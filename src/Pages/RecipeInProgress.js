@@ -33,23 +33,24 @@ function RecipeInProgress() {
         type: 'food',
         nationality: recipe.strArea,
         category: recipe.strCategory,
-        alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
-        name: recipe.strMeal ? recipe.strMeal : item.strDrink,
-        image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+        alcoholicOrNot: '',
+        name: recipe.strMeal,
+        image: recipe.strMealThumb,
         doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
         tags: [recipe.strTags],
       }];
       localStorage.setItem('doneRecipes', JSON.stringify(arrayNew));
     }
     if (idDrink) {
+      console.log(recipe);
       const arrayNew = [{
         id: idDrink,
         type: 'drink',
         nationality: recipe.strArea,
         category: recipe.strCategory,
-        alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
-        name: recipe.strMeal ? recipe.strMeal : item.strDrink,
-        image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+        alcoholicOrNot: recipe.strAlcoholic,
+        name: recipe.strDrink,
+        image: recipe.strDrinkThumb,
         doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
         tags: [recipe.strTags],
       }];
@@ -65,9 +66,9 @@ function RecipeInProgress() {
           type: 'food',
           nationality: recipe.strArea,
           category: recipe.strCategory,
-          alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
-          name: recipe.strMeal ? recipe.strMeal : item.strDrink,
-          image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+          alcoholicOrNot: '',
+          name: recipe.strMeal,
+          image: recipe.strMealThumb,
           doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
           tags: [recipe.strTags],
         }];
@@ -80,9 +81,9 @@ function RecipeInProgress() {
           type: 'drink',
           nationality: recipe.strArea,
           category: recipe.strCategory,
-          alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
-          name: recipe.strMeal ? recipe.strMeal : item.strDrink,
-          image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+          alcoholicOrNot: recipe.strAlcoholic,
+          name: recipe.strDrink,
+          image: recipe.strDrinkThumb,
           doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
           tags: [recipe.strTags],
         }];
