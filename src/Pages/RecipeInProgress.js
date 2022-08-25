@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
-// Tentativa de conserto do evaluator remoto (esse comentário pode ser apagado)
 
 function RecipeInProgress() {
   const { idMeal, idDrink } = useParams();
@@ -10,18 +9,18 @@ function RecipeInProgress() {
   useEffect(() => {
     const getRecipeInProgressDetails = () => {
       if (idMeal) {
-        const waitMeal = async () => {
+        const waitMealInProgress = async () => {
           const data = await getMealRecipe(idMeal);
           setRecipe(data[0]);
         };
-        waitMeal();
+        waitMealInProgress();
       }
       if (idDrink) {
-        const waitDrink = async () => {
+        const waitDrinkInProgress = async () => {
           const data = await getDrinkRecipe(idDrink);
           setRecipe(data[0]);
         };
-        waitDrink();
+        waitDrinkInProgress();
       }
     };
     getRecipeInProgressDetails();

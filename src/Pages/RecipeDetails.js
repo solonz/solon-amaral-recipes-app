@@ -1,59 +1,43 @@
 // import { Carousel } from 'bootstrap';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom';
 import Context from '../context/Context';
-import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const copy = require('clipboard-copy');
 
 function RecipeDetails() {
   const { idMeal, idDrink } = useParams();
-  const [recipe, setRecipe] = useState([]);
-  const [measures, setMeasures] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
-  const [isDone, setIsDone] = useState(false);
-  const [inProgress, setInProgress] = useState(false);
-  const { drinks, foods, copied, setCopied } = useContext(Context);
+  const { drinks,
+    foods,
+    copied,
+    setCopied,
+    waitMeal,
+    waitDrink,
+    recipe,
+    measures,
+    ingredients,
+    isDone,
+    inProgress,
+    isFavorite } = useContext(Context);
   const history = useHistory();
   const num6 = 6;
 
-  const getRecipeDetails = () => {
-    const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    const doneRecipesList = JSON.parse(localStorage.getItem('doneRecipes'));
-
-    if (idMeal) {
-      const waitMeal = async () => {
-        const data = await getMealRecipe(idMeal);
-        setRecipe(data);
-        setMeasures(Object.keys(data[0]).filter((e) => e.includes('strMeasure')));
-        setIngredients(Object.keys(data[0]).filter((e) => e.includes('strIngredient')));
-        if (inProgressList !== null) {
-          setInProgress(Object.keys(inProgressList.meals).includes(idMeal));
-        }
-        if (doneRecipesList !== null) {
-          setIsDone(doneRecipesList.some(({ id }) => id === idMeal));
-        }
-      };
-      waitMeal();
-    }
-    if (idDrink) {
-      const waitDrink = async () => {
-        const data = await getDrinkRecipe(idDrink);
-        setRecipe(data);
-        setMeasures(Object.keys(data[0]).filter((e) => e.includes('strMeasure')));
-        setIngredients(Object.keys(data[0]).filter((e) => e.includes('strIngredient')));
-        if (inProgressList !== null) {
-          setInProgress(Object.keys(inProgressList.cocktails).includes(idDrink));
-        }
-        if (doneRecipesList !== null) {
-          setIsDone(doneRecipesList.some(({ id }) => id === idDrink));
-        }
-      };
-      waitDrink();
-    }
-  };
-
-  useEffect(() => { getRecipeDetails(); }, []);
+  useEffect(() => {
+    const getRecipeDetails = () => {
+      const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const doneRecipesList = JSON.parse(localStorage.getItem('doneRecipes'));
+      const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (idMeal) {
+        waitMeal(idMeal, inProgressList, doneRecipesList, favoritesList);
+      }
+      if (idDrink) {
+        waitDrink(idDrink, inProgressList, doneRecipesList, favoritesList);
+      }
+    };
+    getRecipeDetails();
+  }, []);
 
   const saveThisProgress = () => {
     const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -112,29 +96,27 @@ function RecipeDetails() {
 
   const refreshTheArray = (favoritesList) => {
     if (idMeal) {
-      const food = recipe[0];
       const objFood = [
         ...favoritesList,
         { id: idMeal,
           type: 'food',
-          nationality: food.strArea,
-          category: food.strCategory,
+          nationality: recipe[0].strArea,
+          category: recipe[0].strCategory,
           alcoholicOrNot: '',
-          name: food.strMeal,
-          image: food.strMealThumb }];
+          name: recipe[0].strMeal,
+          image: recipe[0].strMealThumb }];
       localStorage.setItem('favoriteRecipes', JSON.stringify(objFood));
     }
     if (idDrink) {
-      const drink = recipe[0];
       const objDrink = [
         ...favoritesList,
         { id: idDrink,
           type: 'drink',
-          nationality: drink.strArea,
-          category: drink.strCategory,
-          alcoholicOrNot: drink.strAlcoholic,
-          name: drink.strDrink,
-          image: drink.strDrinkThumb }];
+          nationality: recipe[0].strArea,
+          category: recipe[0].strCategory,
+          alcoholicOrNot: recipe[0].strAlcoholic,
+          name: recipe[0].strDrink,
+          image: recipe[0].strDrinkThumb }];
       localStorage.setItem('favoriteRecipes', JSON.stringify(objDrink));
     }
   };
@@ -190,10 +172,13 @@ function RecipeDetails() {
             </button>
             <button
               type="button"
-              data-testid="favorite-btn"
               onClick={ handleFavorite }
             >
-              Favorite
+              <img
+                data-testid="favorite-btn"
+                src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+                alt=""
+              />
             </button>
           </div>
           <section className="carousel">
