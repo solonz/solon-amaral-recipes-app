@@ -14,11 +14,14 @@ function RecipeInProgress() {
     if (id === idMeal && idMeal) {
       const comidas = Object.keys(recipes.meals);
       const arrComidas = comidas.map((elt) => (
-        foods.meals.filter((food) => food.idMeal === elt)));
-      console.log(arrComidas);
+        foods.meals.find((food) => food.idMeal === elt)));
+      setArrRecipes(arrComidas);
     }
     if (id === idDrink && idDrink) {
-      console.log('bebida');
+      const bebidas = Object.keys(recipes.cocktails);
+      const arrBebidas = bebidas.map((elt) => (
+        drinks.drinks.find((dr) => dr.idDrink === elt)));
+      setArrRecipes(arrBebidas);
     }
   };
 
@@ -118,9 +121,41 @@ function RecipeInProgress() {
   return (
     <div>
       <h1>In Progress</h1>
-      <button type="button" onClick={ setDone } data-testid="finish-recipe-btn">
-        Finish Recipe
-      </button>
+      { arrRecipes.map((rec, id) => (
+        <div key={ id }>
+          <h2 data-testid="recipe-title">{rec.strMeal || rec.strDrink }</h2>
+          <img
+            alt=""
+            width="300px"
+            data-testid="recipe-photo"
+            src={ rec.strDrinkThumb || rec.strMealThumb }
+          />
+          <h4
+            data-testid="recipe-category"
+          >
+            { rec.strMeal ? rec.strCategory : '' }
+          </h4>
+          <h5>Ingredients</h5>
+          <ul>
+            {}
+          </ul>
+          <button
+            type="button"
+            data-testid="share-btn"
+          >
+            Share
+          </button>
+          <button
+            type="button"
+            data-testid="favorite-btn"
+          >
+            Favorite
+          </button>
+          <button type="button" onClick={ setDone } data-testid="finish-recipe-btn">
+            Finish Recipe
+          </button>
+        </div>
+      )) }
     </div>
   );
 }
