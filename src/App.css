@@ -1,3 +1,19 @@
+* {
+  box-sizing: 0;
+  margin: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-size: 18px;
+  margin: 0 auto;
+  max-width: 360px;
+  padding: 0;
+}
+
 .meals {
   align-items: center;
   background: #0fa36b;
@@ -72,22 +88,43 @@
   position: fixed;
 }
 
-.imgFoods {
-  border-radius: 10px;
+.imgFoods, .img {
   height: auto;
-  margin-left: 5px;
-  margin-top: 5px;
-  max-height: 150px;
-  max-width: 150px;
+  max-height: 140px;
+  max-width: 140px;
   width: auto;
 }
 
-.imgDrinks {
-  border-radius: 10px;
-  height: auto;
-  margin-left: 5px;
-  margin-top: 5px;
-  max-height: 150px;
-  max-width: 150px;
-  width: auto;
+.carousel {
+  column-gap: 10px;
+  display: flex;
+  max-width: 100vw;
+  overflow-x: auto;
+}
+
+.img-carousel {
+  width: 30%;
+}
+
+.carousel > div {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  height: 100px;
+  justify-content: center;
+  width: 50%;
+}
+
+iframe {
+  height: 50vw;
+  max-width: 80vw;
+}
+
+.start-recipe {
+  bottom: 0;
+  position: fixed;
+}
+
+.div-button {
+  text-align: center;
 }

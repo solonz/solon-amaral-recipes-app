@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Context from './Context';
+import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
 
 function Provider({ children }) {
   const [foods, setFoods] = useState('');
@@ -11,6 +12,13 @@ function Provider({ children }) {
   const [foodCategory, setFoodCategory] = useState([]);
   const [drinkCategory, setDrinkCategory] = useState([]);
   const [filter, setFilter] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [recipe, setRecipe] = useState([]);
+  const [measures, setMeasures] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
+  const [isDone, setIsDone] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const foodAPI = async () => {
     setLoading(true);
@@ -114,6 +122,38 @@ function Provider({ children }) {
     setDrinks(newDrinks);
   };
 
+  const waitMeal = async (idMeal, inProgressList, doneRecipesList, favoritesList) => {
+    const data = await getMealRecipe(idMeal);
+    setRecipe(data);
+    setMeasures(Object.keys(data[0]).filter((e) => e.includes('strMeasure')));
+    setIngredients(Object.keys(data[0]).filter((e) => e.includes('strIngredient')));
+    if (inProgressList !== null) {
+      setInProgress(Object.keys(inProgressList.meals).includes(idMeal));
+    }
+    if (doneRecipesList !== null) {
+      setIsDone(doneRecipesList.some(({ id }) => id === idMeal));
+    }
+    if (favoritesList !== null) {
+      setIsFavorite(favoritesList.some(({ id }) => id === idMeal));
+    }
+  };
+
+  const waitDrink = async (idDrink, inProgressList, doneRecipesList, favoritesList) => {
+    const data = await getDrinkRecipe(idDrink);
+    setRecipe(data);
+    setMeasures(Object.keys(data[0]).filter((e) => e.includes('strMeasure')));
+    setIngredients(Object.keys(data[0]).filter((e) => e.includes('strIngredient')));
+    if (inProgressList !== null) {
+      setInProgress(Object.keys(inProgressList.cocktails).includes(idDrink));
+    }
+    if (doneRecipesList !== null) {
+      setIsDone(doneRecipesList.some(({ id }) => id === idDrink));
+    }
+    if (favoritesList !== null) {
+      setIsFavorite(favoritesList.some(({ id }) => id === idDrink));
+    }
+  };
+
   useEffect(() => {
     foodAPI();
     drinkAPI();
@@ -128,6 +168,7 @@ function Provider({ children }) {
     drinks,
     setDrinks,
     loading,
+    setLoading,
     foodCategory,
     drinkCategory,
     setDrinkCategory,
@@ -139,6 +180,16 @@ function Provider({ children }) {
     setFilter,
     handleFood,
     handleDrink,
+    copied,
+    setCopied,
+    waitMeal,
+    waitDrink,
+    recipe,
+    measures,
+    ingredients,
+    isDone,
+    inProgress,
+    isFavorite,
   };
 
   return (

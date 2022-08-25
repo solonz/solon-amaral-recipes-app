@@ -33,10 +33,7 @@ function Drinks() {
       </button>
       { drinks.drinks
         && drinks.drinks.slice(0, num12).map((drink, index) => (
-          <Link
-            to={ `/drinks/${drink.idDrink}` }
-            key={ index }
-          >
+          <Link to={ `/drinks/${drink.idDrink}` } key={ index }>
             <div data-testid={ `${index}-recipe-card` }>
               <img
                 src={ drink.strDrinkThumb }
