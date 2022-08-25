@@ -1,10 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Context from '../context/Context';
 import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
 
 function RecipeInProgress() {
   const { idMeal, idDrink } = useParams();
   const [recipe, setRecipe] = useState([]);
+  const [arrRecipes, setArrRecipes] = useState([]);
+  const { foods, drinks } = useContext(Context);
+
+  const renderRecipes = (id) => {
+    const recipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (id === idMeal && idMeal) {
+      const comidas = Object.keys(recipes.meals);
+      const arrComidas = comidas.map((elt) => (
+        foods.meals.filter((food) => food.idMeal === elt)));
+      console.log(arrComidas);
+    }
+    if (id === idDrink && idDrink) {
+      console.log('bebida');
+    }
+  };
 
   useEffect(() => {
     const getRecipeInProgressDetails = () => {
@@ -14,12 +30,14 @@ function RecipeInProgress() {
           setRecipe(data[0]);
         };
         waitMealInProgress();
+        renderRecipes(idMeal);
       }
       if (idDrink) {
         const waitDrinkInProgress = async () => {
           const data = await getDrinkRecipe(idDrink);
           setRecipe(data[0]);
         };
+        renderRecipes(idDrink);
         waitDrinkInProgress();
       }
     };
