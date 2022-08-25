@@ -53,9 +53,7 @@ function RecipeDetails() {
     }
   };
 
-  useEffect(() => {
-    getRecipeDetails();
-  }, []);
+  useEffect(() => { getRecipeDetails(); }, []);
 
   const saveThisProgress = () => {
     const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -87,38 +85,64 @@ function RecipeDetails() {
     }
   };
 
-  const copyContent = () => {
-    copy(window.location.href);
-    setCopied(true);
+  const copyContent = () => { copy(window.location.href); setCopied(true); };
+
+  const createNewArray = () => {
+    if (idMeal) {
+      const objFood = [{ id: idMeal,
+        type: 'food',
+        nationality: recipe[0].strArea,
+        category: recipe[0].strCategory,
+        alcoholicOrNot: '',
+        name: recipe[0].strMeal,
+        image: recipe[0].strMealThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objFood));
+    }
+    if (idDrink) {
+      const objDrink = [{ id: idDrink,
+        type: 'drink',
+        nationality: recipe[0].strArea ? recipe[0].strArea : '',
+        category: recipe[0].strCategory,
+        alcoholicOrNot: recipe[0].strAlcoholic,
+        name: recipe[0].strDrink,
+        image: recipe[0].strDrinkThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objDrink));
+    }
+  };
+
+  const refreshTheArray = (favoritesList) => {
+    if (idMeal) {
+      const food = recipe[0];
+      const objFood = [
+        ...favoritesList,
+        { id: idMeal,
+          type: 'food',
+          nationality: food.strArea,
+          category: food.strCategory,
+          alcoholicOrNot: '',
+          name: food.strMeal,
+          image: food.strMealThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objFood));
+    }
+    if (idDrink) {
+      const drink = recipe[0];
+      const objDrink = [
+        ...favoritesList,
+        { id: idDrink,
+          type: 'drink',
+          nationality: drink.strArea,
+          category: drink.strCategory,
+          alcoholicOrNot: drink.strAlcoholic,
+          name: drink.strDrink,
+          image: drink.strDrinkThumb }];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(objDrink));
+    }
   };
 
   const handleFavorite = () => {
-    if (idMeal) {
-      const filt = foods.meals.filter((a) => a.idMeal === idMeal);
-      const food = filt[0];
-      const objFood = { id: idMeal,
-        type: 'food',
-        nationality: food.strArea,
-        category: food.strCategory,
-        alcoholicOrNot: '',
-        name: food.strMeal,
-        image: food.strMealThumb };
-      const fav = JSON.stringify(objFood);
-      localStorage.setItem('favoriteRecipes', fav);
-    }
-    if (idDrink) {
-      const filt = drinks.drinks.filter((a) => a.idDrink === idDrink);
-      const drink = filt[0];
-      const objDrink = [{ id: idDrink,
-        type: 'drink',
-        nationality: '',
-        category: drink.strCategory,
-        alcoholicOrNot: drink.strAlcoholic,
-        name: drink.strDrink,
-        image: drink.strDrinkThumb }];
-      const fav = JSON.stringify(...objDrink);
-      localStorage.setItem('favoriteRecipes', fav);
-    }
+    const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (favoritesList === null) { createNewArray(); }
+    if (favoritesList !== null) { refreshTheArray(favoritesList); }
   };
 
   return (
@@ -145,69 +169,64 @@ function RecipeDetails() {
             </p>
           ))}
           <p data-testid="instructions">{item.strInstructions}</p>
+          <iframe
+            // Referência para inserir vídeo embedado: https://thewebdev.info/2021/10/02/how-to-embed-a-youtube-video-into-a-react-app/;
+            width="1280"
+            data-testid="video"
+            height="720"
+            src={ item.strYoutube }
+            frameBorder="0"
+            title={ item.strMeal ? item.strMeal : item.strDrink }
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
+            allowFullScreen
+          />
           <div>
-            <iframe
-              // Referência para inserir vídeo embedado: https://thewebdev.info/2021/10/02/how-to-embed-a-youtube-video-into-a-react-app/;
-              width="1280"
-              data-testid="video"
-              height="720"
-              src={ item.strYoutube }
-              frameBorder="0"
-              title={ item.strMeal ? item.strMeal : item.strDrink }
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media;"
-              allowFullScreen
-            />
-            <div>
-              <button
-                type="button"
-                data-testid="share-btn"
-                onClick={ copyContent }
-              >
-                { (copied) ? 'Link copied!' : 'Share' }
-              </button>
-              <button
-                type="button"
-                data-testid="favorite-btn"
-                onClick={ handleFavorite }
-              >
-                Favorite
-              </button>
-            </div>
-            <section className="carousel">
-              {
-                (((history.location.pathname.includes('foods') && drinks.drinks) || (
-                  history.location.pathname.includes('drinks') && foods.foods)) ? (
-                    drinks.drinks.slice(0, num6).map((drink, id) => (
-                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                        <p
-                          data-testid={ `${id}-recomendation-title` }
-                        >
-                          {drink.strDrink}
-                        </p>
-                        <img
-                          src={ drink.strDrinkThumb }
-                          alt={ drink.strDrink }
-                          className="img-carousel"
-                        />
-                      </div>
-                    ))) : (
-                    foods.meals.slice(0, num6).map((meal, id) => (
-                      <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                        <p data-testid={ `${id}-recomendation-title` }>
-                          {meal.strMeal}
-
-                        </p>
-                        <img
-                          src={ meal.strMealThumb }
-                          alt={ meal.strMeal }
-                          className="img-carousel"
-                        />
-                      </div>
-                    ))
-                  ))
-              }
-            </section>
+            <button
+              type="button"
+              data-testid="share-btn"
+              onClick={ copyContent }
+            >
+              { (copied) ? 'Link copied!' : 'Share' }
+            </button>
+            <button
+              type="button"
+              data-testid="favorite-btn"
+              onClick={ handleFavorite }
+            >
+              Favorite
+            </button>
           </div>
+          <section className="carousel">
+            {
+              (((history.location.pathname.includes('foods') && drinks.drinks) || (
+                history.location.pathname.includes('drinks') && foods.foods)) ? (
+                  drinks.drinks.slice(0, num6).map((drink, id) => (
+                    <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                      <p data-testid={ `${id}-recomendation-title` }>
+                        {drink.strDrink}
+                      </p>
+                      <img
+                        src={ drink.strDrinkThumb }
+                        alt={ drink.strDrink }
+                        className="img-carousel"
+                      />
+                    </div>
+                  ))) : (
+                  foods.meals.slice(0, num6).map((meal, id) => (
+                    <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                      <p data-testid={ `${id}-recomendation-title` }>
+                        {meal.strMeal}
+                      </p>
+                      <img
+                        src={ meal.strMealThumb }
+                        alt={ meal.strMeal }
+                        className="img-carousel"
+                      />
+                    </div>
+                  ))
+                ))
+            }
+          </section>
           { isDone === false && (
             <div className="div-button">
               <Link to={ `${history.location.pathname}/in-progress` }>

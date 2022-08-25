@@ -1,60 +1,99 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { getMealRecipe, getDrinkRecipe } from '../services/getRecipe';
 
 function RecipeInProgress() {
   const { idMeal, idDrink } = useParams();
+  const [recipe, setRecipe] = useState([]);
+
+  useEffect(() => {
+    const getRecipeInProgressDetails = () => {
+      if (idMeal) {
+        const waitMeal = async () => {
+          const data = await getMealRecipe(idMeal);
+          setRecipe(data[0]);
+        };
+        waitMeal();
+      }
+      if (idDrink) {
+        const waitDrink = async () => {
+          const data = await getDrinkRecipe(idDrink);
+          setRecipe(data[0]);
+        };
+        waitDrink();
+      }
+    };
+    getRecipeInProgressDetails();
+  }, []);
+
+  const createNewArray = () => {
+    if (idMeal) {
+      const arrayNew = [{
+        id: idMeal,
+        type: 'food',
+        nationality: recipe.strArea,
+        category: recipe.strCategory,
+        alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
+        name: recipe.strMeal ? recipe.strMeal : item.strDrink,
+        image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+        doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
+        tags: [recipe.strTags],
+      }];
+      localStorage.setItem('doneRecipes', JSON.stringify(arrayNew));
+    }
+    if (idDrink) {
+      const arrayNew = [{
+        id: idDrink,
+        type: 'drink',
+        nationality: recipe.strArea,
+        category: recipe.strCategory,
+        alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
+        name: recipe.strMeal ? recipe.strMeal : item.strDrink,
+        image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+        doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
+        tags: [recipe.strTags],
+      }];
+      localStorage.setItem('doneRecipes', JSON.stringify(arrayNew));
+    }
+  };
+
+  const refreshTheArray = (doneRecipesList) => {
+    if (idMeal) {
+      const arrayRefresh = [
+        ...doneRecipesList,
+        { id: idMeal,
+          type: 'food',
+          nationality: recipe.strArea,
+          category: recipe.strCategory,
+          alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
+          name: recipe.strMeal ? recipe.strMeal : item.strDrink,
+          image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+          doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
+          tags: [recipe.strTags],
+        }];
+      localStorage.setItem('doneRecipes', JSON.stringify(arrayRefresh));
+    }
+    if (idDrink) {
+      const arrayRefresh = [
+        ...doneRecipesList,
+        { id: idDrink,
+          type: 'drink',
+          nationality: recipe.strArea,
+          category: recipe.strCategory,
+          alcoholicOrNot: recipe.item.strAlcoholic ? recipe.item.strAlcoholic : '',
+          name: recipe.strMeal ? recipe.strMeal : item.strDrink,
+          image: recipe.strMealThumb ? recipe.strMealThumb : recipe.strDrinkThumb,
+          doneDate: '', // aqui pede 'quando-a-receita-foi-concluida' -> e não sei como fazer isso
+          tags: [recipe.strTags],
+        }];
+      localStorage.setItem('doneRecipes', JSON.stringify(arrayRefresh));
+    }
+  };
 
   const setDone = () => {
     const doneRecipesList = JSON.parse(localStorage.getItem('doneRecipes'));
-    if (doneRecipesList === null) {
-      if (idDrink) {
-        const arrayNew = [{
-          id: idDrink,
-          type: 'drink',
-          nationality: 'nacionalidade-da-receita-ou-texto-vazio',
-          category: 'categoria-da-receita-ou-texto-vazio',
-          alcoholicOrNot: 'alcoholic-ou-non-alcoholic-ou-texto-vazio',
-          name: 'nome-da-receita',
-          image: 'imagem-da-receita',
-          doneDate: 'quando-a-receita-foi-concluida',
-          tags: 'array-de-tags-da-receita-ou-array-vazio',
-        }];
-        const stringified = JSON.stringify(arrayNew);
-        localStorage.setItem('doneRecipes', stringified);
-      }
-      if (idMeal) {
-        const arrayNew = [{
-          id: idMeal,
-          type: 'food',
-          nationality: 'nacionalidade-da-receita-ou-texto-vazio',
-          category: 'categoria-da-receita-ou-texto-vazio',
-          alcoholicOrNot: 'alcoholic-ou-non-alcoholic-ou-texto-vazio',
-          name: 'nome-da-receita',
-          image: 'imagem-da-receita',
-          doneDate: 'quando-a-receita-foi-concluida',
-          tags: 'array-de-tags-da-receita-ou-array-vazio',
-        }];
-        const stringified = JSON.stringify(arrayNew);
-        localStorage.setItem('doneRecipes', stringified);
-      }
-    }
-    if (doneRecipesList !== null) {
-      if (idDrink) {
-        const arrayRefresh = [
-          ...doneRecipesList,
-          { id: idDrink, type: 'food' }];
-        const stringified = JSON.stringify(arrayRefresh);
-        localStorage.setItem('doneRecipes', stringified);
-      }
-      if (idMeal) {
-        const arrayRefresh = [
-          ...doneRecipesList,
-          // abaixo é necessário ter todas as chaves igual ao array da linha 10, só deixei assim por enquanto pra testar o armazenamento no localStorage
-          { id: idMeal, type: 'food' }];
-        const stringified = JSON.stringify(arrayRefresh);
-        localStorage.setItem('doneRecipes', stringified);
-      }
-    }
+    if (doneRecipesList === null) { createNewArray(); }
+    if (doneRecipesList !== null) { refreshTheArray(doneRecipesList); }
   };
 
   return (
