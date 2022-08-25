@@ -172,6 +172,7 @@ function RecipeDetails() {
             </button>
             <button
               type="button"
+              data-testid="fav-btn"
               onClick={ handleFavorite }
             >
               <img
