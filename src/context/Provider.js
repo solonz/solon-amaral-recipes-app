@@ -124,7 +124,7 @@ function Provider({ children }) {
 
   const waitMeal = async (idMeal, inProgressList, doneRecipesList, favoritesList) => {
     const data = await getMealRecipe(idMeal);
-    setRecipe(data);
+    setRecipe(data[0]);
     setMeasures(Object.keys(data[0]).filter((e) => e.includes('strMeasure')));
     setIngredients(Object.keys(data[0]).filter((e) => e.includes('strIngredient')));
     if (inProgressList !== null) {
@@ -140,7 +140,7 @@ function Provider({ children }) {
 
   const waitDrink = async (idDrink, inProgressList, doneRecipesList, favoritesList) => {
     const data = await getDrinkRecipe(idDrink);
-    setRecipe(data);
+    setRecipe(data[0]);
     setMeasures(Object.keys(data[0]).filter((e) => e.includes('strMeasure')));
     setIngredients(Object.keys(data[0]).filter((e) => e.includes('strIngredient')));
     if (inProgressList !== null) {
