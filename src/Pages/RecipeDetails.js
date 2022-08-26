@@ -2,6 +2,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom';
 import Context from '../context/Context';
+import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 
@@ -20,21 +21,19 @@ function RecipeDetails() {
     ingredients,
     isDone,
     inProgress,
-    isFavorite } = useContext(Context);
+    isFavorite,
+    setIsFavorite } = useContext(Context);
   const history = useHistory();
   const num6 = 6;
 
   useEffect(() => {
+    setCopied(false);
     const getRecipeDetails = () => {
       const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
       const doneRecipesList = JSON.parse(localStorage.getItem('doneRecipes'));
       const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      if (idMeal) {
-        waitMeal(idMeal, inProgressList, doneRecipesList, favoritesList);
-      }
-      if (idDrink) {
-        waitDrink(idDrink, inProgressList, doneRecipesList, favoritesList);
-      }
+      if (idMeal) { waitMeal(idMeal, inProgressList, doneRecipesList, favoritesList); }
+      if (idDrink) { waitDrink(idDrink, inProgressList, doneRecipesList, favoritesList); }
     };
     getRecipeDetails();
   }, []);
@@ -96,8 +95,7 @@ function RecipeDetails() {
 
   const refreshTheArray = (favoritesList) => {
     if (idMeal) {
-      const objFood = [
-        ...favoritesList,
+      const objFood = [...favoritesList,
         { id: idMeal,
           type: 'food',
           nationality: recipe[0].strArea,
@@ -108,8 +106,7 @@ function RecipeDetails() {
       localStorage.setItem('favoriteRecipes', JSON.stringify(objFood));
     }
     if (idDrink) {
-      const objDrink = [
-        ...favoritesList,
+      const objDrink = [...favoritesList,
         { id: idDrink,
           type: 'drink',
           nationality: recipe[0].strArea,
@@ -121,10 +118,29 @@ function RecipeDetails() {
     }
   };
 
+  const removeFavorite = (favoritesList) => {
+    if (idMeal) {
+      const arrayAfterRemoved = favoritesList.filter(({ id }) => id !== idMeal);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(arrayAfterRemoved));
+    }
+    if (idDrink) {
+      const arrayAfterRemoved = favoritesList.filter(({ id }) => id !== idDrink);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(arrayAfterRemoved));
+    }
+  };
+
   const handleFavorite = () => {
-    const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    if (favoritesList === null) { createNewArray(); }
-    if (favoritesList !== null) { refreshTheArray(favoritesList); }
+    if (isFavorite === false) {
+      setIsFavorite(true);
+      const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (favoritesList === null) { createNewArray(); }
+      if (favoritesList !== null) { refreshTheArray(favoritesList); }
+    }
+    if (isFavorite === true) {
+      setIsFavorite(false);
+      const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      removeFavorite(favoritesList);
+    }
   };
 
   return (
@@ -163,18 +179,15 @@ function RecipeDetails() {
             allowFullScreen
           />
           <div>
-            <button
-              type="button"
-              data-testid="share-btn"
-              onClick={ copyContent }
-            >
-              { (copied) ? 'Link copied!' : 'Share' }
+            <h6>{ copied && 'Link copied!' }</h6>
+            <button type="button" onClick={ copyContent }>
+              <img
+                data-testid="share-btn"
+                src={ shareIcon }
+                alt=""
+              />
             </button>
-            <button
-              type="button"
-              data-testid="fav-btn"
-              onClick={ handleFavorite }
-            >
+            <button type="button" onClick={ handleFavorite }>
               <img
                 data-testid="favorite-btn"
                 src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
