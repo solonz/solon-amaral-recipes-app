@@ -96,6 +96,7 @@ function RecipeInProgress() {
     if (doneRecipesList !== null) { refreshTheArray(doneRecipesList); }
   };
 
+  console.log(recipe);
   return (
     <div>
       <h1>In Progress</h1>

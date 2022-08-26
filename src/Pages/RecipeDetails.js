@@ -56,6 +56,7 @@ function RecipeDetails() {
           cocktails: { ...inProgressList.cocktails },
           meals: { ...inProgressList.meals, [idMeal]: [] },
         };
+        console.log(idMeal);
         localStorage.setItem('inProgressRecipes', JSON.stringify(anotherMeal));
       }
       if (idDrink) {
