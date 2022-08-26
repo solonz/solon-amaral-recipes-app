@@ -72,6 +72,7 @@ function RecipeDetails() {
 
   const createNewArray = () => {
     if (idMeal) {
+      console.log(recipe);
       const objFood = [{ id: idMeal,
         type: 'food',
         nationality: recipe[0].strArea,
