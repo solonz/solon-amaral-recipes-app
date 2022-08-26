@@ -35,19 +35,11 @@ describe('Testa o componente de Detalhes' , () => {
       })
     });
 
-  test('Testa se a receita está na tela', async () => {
+  test.only('Testa se a receita está na tela', async () => {
       const { history } = renderWithRouter(<Provider><App /></Provider>);
-      const emailInput =  screen.getByTestId("email-input");
-      userEvent.type(emailInput, 'lalala@gmail.com')
-      const passInput =  screen.getByTestId("password-input");
-      userEvent.type(passInput, '1234567') 
-      const loginButton =  screen.getByTestId("login-submit-btn");
-      userEvent.click(loginButton);
-
+      history.push('/foods/52882');
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalled();
-        history.push('/foods/52882');
 
         const nameRecipe = screen.queryByTestId('recipe-title');
         expect(nameRecipe).toBeInTheDocument();
@@ -56,6 +48,7 @@ describe('Testa o componente de Detalhes' , () => {
         const btnImg = screen.queryByTestId('fav-btn');
         const btnStart = screen.queryByTestId('start-recipe-btn')
         userEvent.click(btnImg);
+        expect(imgFav).toHaveAttribute('src', blackHeartIcon)
         expect(localStorage.getItem('favoriteRecipes')).toBeTruthy();
         userEvent.click(btnStart);
         expect(localStorage.getItem('inProgressRecipes')).toBeTruthy();
