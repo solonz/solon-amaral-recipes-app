@@ -56,7 +56,6 @@ function RecipeDetails() {
           cocktails: { ...inProgressList.cocktails },
           meals: { ...inProgressList.meals, [idMeal]: [] },
         };
-        // console.log(idMeal);
         localStorage.setItem('inProgressRecipes', JSON.stringify(anotherMeal));
       }
       if (idDrink) {
@@ -145,7 +144,6 @@ function RecipeDetails() {
     }
   };
 
-  // console.log(measures);
   return (
     <section>
       { recipe.map((item, index) => (
@@ -158,7 +156,7 @@ function RecipeDetails() {
           </h3>
           <img
             src={ item.strMealThumb ? item.strMealThumb : item.strDrinkThumb }
-            alt={ item.strMeal ? item.strMeal : item.strDrink }
+            alt=""
             width="300px"
             data-testid="recipe-photo"
           />
