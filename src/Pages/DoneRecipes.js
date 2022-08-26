@@ -10,6 +10,8 @@ function DoneRecipes() {
   const [showFoods, setShowFoods] = useState('false');
   const [showDrinks, setShowDrinks] = useState('false');
   const [showAll, setShowAll] = useState('true');
+  const [showMsg, setShowMsg] = useState('false');
+
   const msgCopied = 'Link copied!';
 
   const doneRecipes = [
@@ -42,14 +44,15 @@ function DoneRecipes() {
   // }, []);
 
   const handleClick = (recipe) => {
-    console.log(recipe);
     if (recipe.type === 'food') {
       clipboardCopy(`http://localhost:3000/foods/${recipe.id}`);
       // if (doneRecipes.includes('recipe.id')) {
       //   setShowButton(recipe.id);
       // }
       // recipe.id
-      setShowButton(false);
+      // setShowButton(false);
+
+      setShowMsg(!showMsg);
       return;
     }
     if (recipe.type === 'drink') {
@@ -140,20 +143,18 @@ function DoneRecipes() {
           {recipe.tags.map((ele) => (
             <p key={ ele } data-testid={ `${index}-${ele}-horizontal-tag` }>{ele}</p>
           ))}
-          {showButton ? (
-            <button
-              type="button"
-              onClick={ () => handleClick(recipe) }
-            >
-              <img
-                src={ shareIcon }
-                alt=" "
-                data-testid={ `${index}-horizontal-share-btn` }
-              />
-            </button>)
-            : (
-              <span>{msgCopied}</span>
-            )}
+
+          <button
+            type="button"
+            onClick={ () => handleClick(recipe) }
+          >
+            <img
+              src={ shareIcon }
+              alt=" "
+              data-testid={ `${index}-horizontal-share-btn` }
+            />
+          </button>
+          {!showMsg && (<span>{msgCopied}</span>)}
         </div>
       )))}
 

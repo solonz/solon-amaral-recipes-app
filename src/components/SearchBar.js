@@ -34,7 +34,7 @@ function SearchBar() {
     if (route === '/foods') {
       foodResult = await getFoodWithIngredient(searchInput);
       setFoods(foodResult);
-      console.log(foodResult);
+      // console.log(foodResult);
       return;
     }
     drinkResult = await getDrinkWithIngredient(searchInput);
