@@ -1,16 +1,17 @@
 import clipboardCopy from 'clipboard-copy';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import ShareButton from '../components/ShareButton';
 import shareIcon from '../images/shareIcon.svg';
 
 function DoneRecipes() {
   const [showButton, setShowButton] = useState('true');
-  // const [ids, setIds] = useState([]);
   const [showFoods, setShowFoods] = useState('false');
   const [showDrinks, setShowDrinks] = useState('false');
   const [showAll, setShowAll] = useState('true');
   const [showMsg, setShowMsg] = useState('false');
+  const [doneRecipesState, setDoneRecipesState] = useState([]);
 
   const msgCopied = 'Link copied!';
 
@@ -39,27 +40,17 @@ function DoneRecipes() {
     },
   ];
 
-  // useEffect(() => {
-  //   setIds(doneRecipes.map((ele) => ele.id));
-  // }, []);
-
-  const handleClick = (recipe) => {
-    if (recipe.type === 'food') {
-      clipboardCopy(`http://localhost:3000/foods/${recipe.id}`);
-      // if (doneRecipes.includes('recipe.id')) {
-      //   setShowButton(recipe.id);
-      // }
-      // recipe.id
-      // setShowButton(false);
-
-      setShowMsg(!showMsg);
-      return;
-    }
-    if (recipe.type === 'drink') {
-      clipboardCopy(`http://localhost:3000/drinks/${recipe.id}`);
-      setShowButton(false);
-    }
-  };
+  // const handleClick = (recipe) => {
+  //   if (recipe.type === 'food') {
+  //     clipboardCopy(`http://localhost:3000/foods/${recipe.id}`);
+  //     setShowMsg(!showMsg);
+  //     return;
+  //   }
+  //   if (recipe.type === 'drink') {
+  //     clipboardCopy(`http://localhost:3000/drinks/${recipe.id}`);
+  //     setShowButton(false);
+  //   }
+  // };
 
   const handleClickAll = () => {
     setShowFoods('false');
@@ -79,7 +70,10 @@ function DoneRecipes() {
     setShowAll('false');
   };
 
-  // console.log(ids);
+  useEffect(() => {
+    setDoneRecipesState(doneRecipes);
+  }, []);
+  console.log(doneRecipesState);
 
   return (
     <div>
@@ -144,7 +138,7 @@ function DoneRecipes() {
             <p key={ ele } data-testid={ `${index}-${ele}-horizontal-tag` }>{ele}</p>
           ))}
 
-          <button
+          {/* <button
             type="button"
             onClick={ () => handleClick(recipe) }
           >
@@ -152,9 +146,10 @@ function DoneRecipes() {
               src={ shareIcon }
               alt=" "
               data-testid={ `${index}-horizontal-share-btn` }
-            />
+            />doneRecipesState
           </button>
-          {!showMsg && (<span>{msgCopied}</span>)}
+          {!showMsg && (<span>{msgCopied}</span>)} */}
+          <ShareButton index={ index } />
         </div>
       )))}
 
@@ -180,7 +175,7 @@ function DoneRecipes() {
           {recipe.tags.map((ele) => (
             <p key={ ele } data-testid={ `${index}-${ele}-horizontal-tag` }>{ele}</p>
           ))}
-          { showButton ? (
+          {/* { showButton ? (
             <button
               type="button"
               onClick={ () => handleClick(recipe) }
@@ -193,7 +188,8 @@ function DoneRecipes() {
             </button>)
             : (
               <span>{msgCopied}</span>
-            )}
+            )} */}
+          <ShareButton index={ index } />
         </div>
       ))}
 
@@ -219,7 +215,7 @@ function DoneRecipes() {
           {recipe.tags.map((ele) => (
             <p key={ ele } data-testid={ `${index}-${ele}-horizontal-tag` }>{ele}</p>
           ))}
-          { showButton ? (
+          {/* { showButton ? (
             <button
               type="button"
               onClick={ () => handleClick(recipe) }
@@ -232,7 +228,8 @@ function DoneRecipes() {
             </button>)
             : (
               <span>{msgCopied}</span>
-            )}
+            )} */}
+          <ShareButton index={ index } />
         </div>
       ))}
     </div>
