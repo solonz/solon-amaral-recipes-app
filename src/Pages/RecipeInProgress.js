@@ -131,8 +131,9 @@ function RecipeInProgress() {
         src={ recipe.strDrinkThumb || recipe.strMealThumb }
         alt=" "
         data-testid="recipe-photo"
+        width="300px"
       />
-      <p data-testid="recipe-title">{recipe.strDrink || recipe.strMeal}</p>
+      <h4 data-testid="recipe-title">{recipe.strDrink || recipe.strMeal}</h4>
       <button
         type="button"
         onClick={ () => handleClick() }
@@ -160,6 +161,7 @@ function RecipeInProgress() {
             {`${recipe.strCategory}`}
           </p>
         )}
+      <h5>Ingredients</h5>
 
       { recipe.idMeal && Object.values(recipe).slice(num9, num29)
         .filter((ele) => ele !== null && ele !== '')
@@ -169,6 +171,8 @@ function RecipeInProgress() {
             {' '}
           </p>
         ))}
+
+      <h5>Instructions</h5>
 
       { recipe.idDrink && Object.values(recipe).slice(num21, num34)
         .filter((ele) => ele !== null && ele !== '')
