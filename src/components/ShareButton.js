@@ -1,26 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
+import PropTypes from 'prop-types';
 import shareIcon from '../images/shareIcon.svg';
-import Context from '../context/Context';
 
-function ShareButton({ index }) {
-  const [showMsg, setShowMsg] = useState('false');
+function ShareButton({ index, recipe }) {
+  const [showMsg, setShowMsg] = useState(false);
   const msgCopied = 'Link copied!';
-  const { doneRecipesState } = useContext(Context);
 
-  const handleClick = (recipe) => {
-    if (recipe.type === 'food') {
-      clipboardCopy(`http://localhost:3000/foods/${recipe.id}`);
+  const handleClick = (recipeProps) => {
+    if (recipeProps.type === 'food') {
+      clipboardCopy(`http://localhost:3000/foods/${recipeProps.id}`);
       setShowMsg(!showMsg);
       return;
     }
-    if (recipe.type === 'drink') {
-      clipboardCopy(`http://localhost:3000/drinks/${recipe.id}`);
+    if (recipeProps.type === 'drink') {
+      clipboardCopy(`http://localhost:3000/drinks/${recipeProps.id}`);
       setShowMsg(!showMsg);
     }
   };
-
-  console.log(showMsg);
 
   return (
     <div>
@@ -40,5 +37,10 @@ function ShareButton({ index }) {
     </div>
   );
 }
+
+ShareButton.propTypes = {
+  index: PropTypes.string.isRequired,
+  recipe: PropTypes.string.isRequired,
+};
 
 export default ShareButton;
