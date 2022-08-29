@@ -31,9 +31,9 @@ function RecipeDetails() {
     const getRecipeDetails = () => {
       const inProgressList = JSON.parse(localStorage.getItem('inProgressRecipes'));
       const doneRecipesList = JSON.parse(localStorage.getItem('doneRecipes'));
-      const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      if (idMeal) { waitMeal(idMeal, inProgressList, doneRecipesList, favoritesList); }
-      if (idDrink) { waitDrink(idDrink, inProgressList, doneRecipesList, favoritesList); }
+      const favoriteList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (idMeal) { waitMeal(idMeal, inProgressList, doneRecipesList, favoriteList); }
+      if (idDrink) { waitDrink(idDrink, inProgressList, doneRecipesList, favoriteList); }
     };
     getRecipeDetails();
   }, []);
@@ -93,9 +93,9 @@ function RecipeDetails() {
     }
   };
 
-  const refreshTheArray = (favoritesList) => {
+  const refreshTheArray = (favoriteList) => {
     if (idMeal) {
-      const objFood = [...favoritesList,
+      const objFood = [...favoriteList,
         { id: idMeal,
           type: 'food',
           nationality: recipe[0].strArea,
@@ -106,7 +106,7 @@ function RecipeDetails() {
       localStorage.setItem('favoriteRecipes', JSON.stringify(objFood));
     }
     if (idDrink) {
-      const objDrink = [...favoritesList,
+      const objDrink = [...favoriteList,
         { id: idDrink,
           type: 'drink',
           nationality: recipe[0].strArea,
@@ -118,13 +118,13 @@ function RecipeDetails() {
     }
   };
 
-  const removeFavorite = (favoritesList) => {
+  const removeFavorite = (favoriteList) => {
     if (idMeal) {
-      const arrayAfterRemoved = favoritesList.filter(({ id }) => id !== idMeal);
+      const arrayAfterRemoved = favoriteList.filter(({ id }) => id !== idMeal);
       localStorage.setItem('favoriteRecipes', JSON.stringify(arrayAfterRemoved));
     }
     if (idDrink) {
-      const arrayAfterRemoved = favoritesList.filter(({ id }) => id !== idDrink);
+      const arrayAfterRemoved = favoriteList.filter(({ id }) => id !== idDrink);
       localStorage.setItem('favoriteRecipes', JSON.stringify(arrayAfterRemoved));
     }
   };
@@ -132,14 +132,14 @@ function RecipeDetails() {
   const handleFavorite = () => {
     if (isFavorite === false) {
       setIsFavorite(true);
-      const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      if (favoritesList === null) { createNewArray(); }
-      if (favoritesList !== null) { refreshTheArray(favoritesList); }
+      const favoriteList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (favoriteList === null) { createNewArray(); }
+      if (favoriteList !== null) { refreshTheArray(favoriteList); }
     }
     if (isFavorite === true) {
       setIsFavorite(false);
-      const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      removeFavorite(favoritesList);
+      const favoriteList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      removeFavorite(favoriteList);
     }
   };
 
