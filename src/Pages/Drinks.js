@@ -38,7 +38,7 @@ function Drinks() {
               <img
                 src={ drink.strDrinkThumb }
                 alt=""
-                className="img"
+                className="imgDrinks"
                 data-testid={ `${index}-card-img` }
               />
               <p data-testid={ `${index}-card-name` }>{drink.strDrink}</p>

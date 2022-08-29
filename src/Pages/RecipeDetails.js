@@ -72,7 +72,6 @@ function RecipeDetails() {
 
   const createNewArray = () => {
     if (idMeal) {
-      console.log(recipe);
       const objFood = [{ id: idMeal,
         type: 'food',
         nationality: recipe[0].strArea,
@@ -156,7 +155,7 @@ function RecipeDetails() {
           </h3>
           <img
             src={ item.strMealThumb ? item.strMealThumb : item.strDrinkThumb }
-            alt={ item.strMeal ? item.strMeal : item.strDrink }
+            alt=""
             width="300px"
             data-testid="recipe-photo"
           />
@@ -197,35 +196,34 @@ function RecipeDetails() {
             </button>
           </div>
           <section className="carousel">
-            {
-              (((history.location.pathname.includes('foods') && drinks.drinks) || (
-                history.location.pathname.includes('drinks') && foods.foods)) ? (
-                  drinks.drinks.slice(0, num6).map((drink, id) => (
-                    <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                      <p data-testid={ `${id}-recomendation-title` }>
-                        {drink.strDrink}
-                      </p>
-                      <img
-                        src={ drink.strDrinkThumb }
-                        alt={ drink.strDrink }
-                        className="img-carousel"
-                      />
-                    </div>
-                  ))) : (
-                  foods.meals.slice(0, num6).map((meal, id) => (
-                    <div key={ id } data-testid={ `${id}-recomendation-card` }>
-                      <p data-testid={ `${id}-recomendation-title` }>
-                        {meal.strMeal}
-                      </p>
-                      <img
-                        src={ meal.strMealThumb }
-                        alt={ meal.strMeal }
-                        className="img-carousel"
-                      />
-                    </div>
-                  ))
+            { drinks.drinks
+            && (((history.location.pathname.includes('foods') && drinks.drinks) || (
+              history.location.pathname.includes('drinks') && foods.foods)) ? (
+                drinks.drinks.slice(0, num6).map((drink, id) => (
+                  <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                    <p data-testid={ `${id}-recomendation-title` }>
+                      {drink.strDrink}
+                    </p>
+                    <img
+                      src={ drink.strDrinkThumb }
+                      alt={ drink.strDrink }
+                      className="img-carousel"
+                    />
+                  </div>
+                ))) : (
+                foods.meals.slice(0, num6).map((meal, id) => (
+                  <div key={ id } data-testid={ `${id}-recomendation-card` }>
+                    <p data-testid={ `${id}-recomendation-title` }>
+                      {meal.strMeal}
+                    </p>
+                    <img
+                      src={ meal.strMealThumb }
+                      alt={ meal.strMeal }
+                      className="img-carousel"
+                    />
+                  </div>
                 ))
-            }
+              ))}
           </section>
           { isDone === false && (
             <div className="div-button">
@@ -246,5 +244,4 @@ function RecipeDetails() {
     </section>
   );
 }
-
 export default RecipeDetails;

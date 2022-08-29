@@ -35,7 +35,7 @@ describe('Testa o componente de Detalhes' , () => {
       })
     });
 
-  test.only('Testa se a receita está na tela', async () => {
+  test('Testa se a receita está na tela', async () => {
       const { history } = renderWithRouter(<Provider><App /></Provider>);
       history.push('/foods/52882');
 
@@ -45,7 +45,7 @@ describe('Testa o componente de Detalhes' , () => {
         expect(nameRecipe).toBeInTheDocument();
         const imgFav = screen.queryByTestId('favorite-btn');
         expect(imgFav).toHaveAttribute('src', whiteHeartIcon)
-        const btnImg = screen.queryByTestId('fav-btn');
+        const btnImg = screen.queryByTestId(/favorite-btn/i);
         const btnStart = screen.queryByTestId('start-recipe-btn')
         userEvent.click(btnImg);
         expect(imgFav).toHaveAttribute('src', blackHeartIcon)
