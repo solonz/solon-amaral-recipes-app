@@ -21,6 +21,13 @@ function FavoriteRecipes() {
     if (item.type === 'drink') { copy(`http://localhost:3000/drinks/${item.id}`); }
   };
 
+  const removeFavorite = (item) => {
+    const favoritesList = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    const arrayAfterRemoved = favoritesList.filter(({ id }) => id !== item.id);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(arrayAfterRemoved));
+    setFavorites(arrayAfterRemoved);
+  };
+
   return (
     <div>
       <Header />
@@ -45,7 +52,7 @@ function FavoriteRecipes() {
                 alt=""
               />
             </button>
-            <button type="button">
+            <button type="button" onClick={ () => removeFavorite(e) }>
               <img
                 data-testid={ `${index}-horizontal-favorite-btn` }
                 src={ blackHeartIcon }
