@@ -35,7 +35,7 @@ function Header() {
           <button type="button" onClick={ () => history.push('/profile') }>
             <img src={ profileIcon } alt=" " data-testid="profile-top-btn" />
           </button>
-          <button type="button" onClick={ handleClick }>
+          <button type="button" onClick={ handleClick } className="btn-2">
             <img src={ searchTopBtn } alt=" " data-testid="search-top-btn" />
           </button>
         </div>)
