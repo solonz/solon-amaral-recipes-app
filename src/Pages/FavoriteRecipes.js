@@ -3,13 +3,23 @@ import Header from '../components/Header';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 
+const copy = require('clipboard-copy');
+
 function FavoriteRecipes() {
   const [favorites, setFavorites] = useState([]);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    setCopied(false);
     const favoriteList = JSON.parse(localStorage.getItem('favoriteRecipes'));
     setFavorites(favoriteList);
   }, []);
+
+  const copyContent = (item) => {
+    setCopied(true);
+    if (item.type === 'food') { copy(`http://localhost:3000/foods/${item.id}`); }
+    if (item.type === 'drink') { copy(`http://localhost:3000/drinks/${item.id}`); }
+  };
 
   return (
     <div>
@@ -27,7 +37,8 @@ function FavoriteRecipes() {
             { e.alcoholicOrNot && <h5>{ e.alcoholicOrNot }</h5>}
           </h5>
           <div>
-            <button type="button">
+            <h6>{ copied && 'Link copied!' }</h6>
+            <button type="button" onClick={ () => copyContent(e) }>
               <img
                 data-testid={ `${index}-horizontal-share-btn` }
                 src={ shareIcon }
