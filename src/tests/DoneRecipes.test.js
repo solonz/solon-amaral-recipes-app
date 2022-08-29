@@ -97,7 +97,7 @@ test('teste o clipboard food', async () => {
     const shareButton = screen.getByTestId('0-horizontal-share-btn');
     userEvent.click(shareButton);
     const linkCopied = await screen.findAllByText(/Link copied!/i);
-    expect(linkCopied).toHaveLength(2);
+    expect(linkCopied).toHaveLength(1);
 
     expect(window.navigator.clipboard.writeText).toHaveBeenCalled();
     expect(window.navigator.clipboard.writeText).toHaveBeenCalledWith('http://localhost:3000/foods/52771');
@@ -116,7 +116,7 @@ test('teste o clipboard drinks', async () => {
     const shareButton = screen.getByTestId('1-horizontal-share-btn');
     userEvent.click(shareButton);
     const linkCopied = await screen.findAllByText(/Link copied!/i);
-    expect(linkCopied).toHaveLength(2);
+    expect(linkCopied).toHaveLength(1);
 
     expect(window.navigator.clipboard.writeText).toHaveBeenCalled();
     expect(window.navigator.clipboard.writeText).toHaveBeenCalledWith('http://localhost:3000/drinks/178319');
